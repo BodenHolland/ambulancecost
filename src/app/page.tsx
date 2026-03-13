@@ -283,9 +283,9 @@ export default function AmbulanceCost() {
         {!result ? (
           <div className="grid md:grid-cols-3 gap-6">
             {[
-              { icon: MapPin, title: 'Locality Based', desc: 'Rates adjust automatically based on CMS Urban, Rural, and Super-Rural designations.' },
-              { icon: ShieldCheck, title: 'Consumer Protection', desc: 'Information on ground ambulance surprise billing laws in 22+ protected states.' },
-              { icon: TrendingUp, title: 'Market Analysis', desc: 'Compare government-set Medicare rates with typical private provider sticker prices.' }
+              { icon: MapPin, title: 'Local Pricing', desc: 'See specific rates for your area based on federal guidelines for urban and rural zones.' },
+              { icon: ShieldCheck, title: 'Know Your Rights', desc: 'Stay informed with the latest updates on surprise billing laws and protections in your state.' },
+              { icon: TrendingUp, title: 'Price Comparison', desc: 'Understand the gap between standard Medicare rates and what private providers typically bill.' }
             ].map((item, i) => (
               <div key={i} className="bg-white p-6 md:p-8 rounded-3xl shadow-xl border border-slate-100 flex flex-col items-center text-center">
                 <div className="w-12 h-12 md:w-14 md:h-14 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-6">
