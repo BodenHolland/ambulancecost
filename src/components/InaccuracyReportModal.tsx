@@ -9,6 +9,21 @@ interface Props {
 }
 
 export default function InaccuracyReportModal({ isOpen, onClose, city, onReport }: Props) {
+  // Lock body scroll when modal is active
+  React.useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.height = '100vh';
+    } else {
+      document.body.style.overflow = '';
+      document.body.style.height = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+      document.body.style.height = '';
+    };
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   return (

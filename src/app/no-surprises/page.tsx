@@ -59,7 +59,7 @@ export default function NoSurprisesPage() {
               </p>
               
               <div className="grid md:grid-cols-2 gap-6 pt-4">
-                <div className="bg-emerald-50 border border-emerald-100 rounded-3xl p-6">
+                <div className="bg-emerald-50 border border-emerald-100 rounded-3xl p-6 flex flex-col items-center text-center">
                   <div className="w-12 h-12 bg-emerald-500 text-white rounded-2xl flex items-center justify-center mb-4">
                     <Plane className="w-6 h-6" />
                   </div>
@@ -70,7 +70,7 @@ export default function NoSurprisesPage() {
                   </p>
                 </div>
                 
-                <div className="bg-amber-50 border border-amber-100 rounded-3xl p-6">
+                <div className="bg-amber-50 border border-amber-100 rounded-3xl p-6 flex flex-col items-center text-center">
                   <div className="w-12 h-12 bg-amber-500 text-white rounded-2xl flex items-center justify-center mb-4">
                     <Ambulance className="w-6 h-6" />
                   </div>
@@ -119,7 +119,7 @@ export default function NoSurprisesPage() {
           <div className="space-y-6">
             
             {/* CTA: Report a Bill */}
-            <div className="bg-slate-900 text-white p-8 rounded-[2rem] shadow-xl relative overflow-hidden group">
+            <div className="bg-slate-900 text-white p-8 rounded-[2rem] shadow-xl relative overflow-hidden group flex flex-col items-center text-center">
               <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:scale-110 transition-transform duration-500">
                 <AlertOctagon className="w-32 h-32" />
               </div>
@@ -147,7 +147,7 @@ export default function NoSurprisesPage() {
             </div>
 
             {/* CTA: Check State Laws */}
-            <div className="bg-white p-8 rounded-[2rem] border border-slate-200 shadow-lg">
+            <div className="bg-white p-8 rounded-[2rem] border border-slate-200 shadow-lg flex flex-col items-center text-center">
               <HelpCircle className="w-10 h-10 text-blue-600 mb-6" />
               <h3 className="text-xl font-bold mb-3">Is your state protected?</h3>
               <p className="text-slate-500 text-sm leading-relaxed mb-6">
@@ -162,11 +162,7 @@ export default function NoSurprisesPage() {
               </Link>
             </div>
 
-            {/* Ethical Notice */}
-            <div className="p-6 bg-slate-50 border border-slate-200 rounded-3xl italic text-xs text-slate-500 leading-relaxed">
-              <Info className="w-4 h-4 mb-2 opacity-50" />
-              AmbulanceCost is a transparency initiative. We do not provide legal or financial advice. Our goal is to empower patients with data to challenge unreasonable billing practices.
-            </div>
+
 
           </div>
         </div>

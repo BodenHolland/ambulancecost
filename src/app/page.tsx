@@ -107,21 +107,22 @@ export default function AmbulanceCost() {
     try {
       const response = await fetch(`/api/lookup?zip=${zip}`);
       if (!response.ok) {
-        // Fallback for demo if zip not in db
+        // Fallback for demo/local if zip not in db or D1 not bound
         const fallback: ZipData = {
           zip,
-          city: 'Unknown',
-          state: 'Unknown',
+          city: 'San Francisco',
+          state: 'CA',
           type: 'urban',
-          is_protected: 0,
+          is_protected: 1,
           rates: null
         };
         const calc = calculateEstimate(serviceType, miles, 'urban', null);
         setResult({ calc, data: fallback });
+        
         if (response.status === 404) {
           setError('Zip code not in 2026 database. Showing urban estimates.');
         } else {
-          throw new Error('Search failed');
+          setError('Could not connect to database. Showing sample data.');
         }
       } else {
         const data: ZipData = await response.json();
@@ -310,7 +311,7 @@ export default function AmbulanceCost() {
               <div className="p-6 md:p-8">
                 {(() => {
                   const matchLocal = result ? getLocalTNTData(result.data.city) : null;
-                  const matchCommunity = result ? communityRates.find(r => r.city.toLowerCase() === result.data.city.toLowerCase()) : null;
+                  const matchCommunity = result && Array.isArray(communityRates) ? communityRates.find(r => r.city.toLowerCase() === result.data.city.toLowerCase()) : null;
 
                   if (matchLocal) {
                     return (
@@ -348,7 +349,7 @@ export default function AmbulanceCost() {
                               Report Inaccurate Data
                             </button>
                           </div>
-                          {flaggedCities.find(f => f.city.toLowerCase() === result.data.city.toLowerCase()) && (
+                          {Array.isArray(flaggedCities) && flaggedCities.find(f => f.city.toLowerCase() === result.data.city.toLowerCase()) && (
                             <div className="mt-3 flex items-center gap-1.5 text-slate-400">
                               <AlertTriangle className="w-3 h-3" />
                               <p className="text-[10px] font-medium italic">
@@ -394,7 +395,7 @@ export default function AmbulanceCost() {
                               Update / Flag Rate
                             </button>
                           </div>
-                          {flaggedCities.find(f => f.city.toLowerCase() === result.data.city.toLowerCase()) && (
+                          {Array.isArray(flaggedCities) && flaggedCities.find(f => f.city.toLowerCase() === result.data.city.toLowerCase()) && (
                             <div className="mt-3 flex items-center gap-1.5 text-slate-400">
                               <AlertTriangle className="w-3 h-3" />
                               <p className="text-[10px] font-medium italic">

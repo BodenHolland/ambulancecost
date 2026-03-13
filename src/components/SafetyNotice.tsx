@@ -66,7 +66,7 @@ export default function SafetyNotice() {
       {showModal && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-slate-900/80 backdrop-blur-md animate-in fade-in duration-300">
           <div className="bg-white rounded-[2rem] sm:rounded-[2.5rem] shadow-2xl max-w-lg w-full border-4 border-red-50 max-h-[90dvh] overflow-y-auto flex flex-col relative animate-in zoom-in-95 duration-300">
-            <div className="bg-red-50 p-5 sm:p-8 flex items-center gap-3 sm:gap-4 border-b border-red-100 flex-shrink-0">
+            <div className="bg-red-50 p-4 sm:p-6 flex items-center gap-3 sm:gap-4 border-b border-red-100 flex-shrink-0">
               <div className="w-12 h-12 sm:w-16 sm:h-16 bg-red-600 rounded-2xl sm:rounded-3xl flex items-center justify-center text-white shadow-lg shadow-red-600/20 flex-shrink-0">
                 <ShieldAlert className="w-6 h-6 sm:w-8 sm:h-8" />
               </div>
@@ -76,7 +76,7 @@ export default function SafetyNotice() {
               </div>
             </div>
             
-            <div className="p-5 sm:p-8 md:p-10 space-y-4 sm:space-y-6 flex-shrink-0">
+            <div className="p-4 sm:p-6 md:p-8 space-y-3 sm:space-y-4 flex-shrink-0">
               <p className="text-slate-900 text-base sm:text-lg font-bold leading-relaxed">
                 If you are experiencing a medical or psychiatric emergency, call 911 or go to the nearest emergency department immediately.
               </p>
@@ -90,17 +90,17 @@ export default function SafetyNotice() {
               </p>
             </div>
 
-            <div className="p-5 sm:p-8 bg-slate-50 flex flex-col sm:flex-row gap-3 sm:gap-4 flex-shrink-0">
+            <div className="p-4 sm:p-6 bg-slate-50 flex flex-col sm:flex-row gap-3 sm:gap-4 flex-shrink-0">
               <a 
                 href="tel:911" 
-                className="flex-1 flex items-center justify-center gap-3 bg-red-600 hover:bg-red-700 text-white py-4 sm:py-5 rounded-2xl font-black text-lg sm:text-xl transition-all shadow-xl shadow-red-600/20 hover:scale-[1.02] active:scale-[0.98]"
+                className="flex-1 flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white py-3 sm:py-4 rounded-xl font-black text-lg sm:text-xl transition-all shadow-xl shadow-red-600/20 hover:scale-[1.02] active:scale-[0.98]"
               >
                 <Phone className="w-5 h-5 sm:w-6 sm:h-6" />
                 Call 911
               </a>
               <button 
                 onClick={handleContinue}
-                className="flex-1 bg-white border-2 border-slate-200 hover:border-slate-300 text-slate-800 py-4 sm:py-5 rounded-2xl font-black text-lg sm:text-xl transition-all hover:bg-slate-100 active:scale-[0.98]"
+                className="flex-1 bg-white border-2 border-slate-200 hover:border-slate-300 text-slate-800 py-3 sm:py-4 rounded-xl font-black text-lg sm:text-xl transition-all hover:bg-slate-100 active:scale-[0.98]"
               >
                 Continue to site
               </button>

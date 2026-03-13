@@ -3,8 +3,9 @@ set -e
 
 echo "🚀 Starting Cloudflare Deployment for Ambulancecost.com"
 
-# 1. Create D1 database if not already done
-if ! npx wrangler d1 info ambulance-db &>/dev/null; then
+# 1. Ensure D1 database exists
+echo "📦 Checking D1 database..."
+if ! npx wrangler d1 list | grep -q "ambulance-db"; then
   echo "📦 Creating D1 database..."
   npx wrangler d1 create ambulance-db
 fi
