@@ -216,8 +216,8 @@ export default function AmbulanceCost() {
                 </div>
                 <input 
                   type="text" 
-                  placeholder="Enter Zip Code (e.g. 94107)"
-                  className="flex-1 py-5 bg-transparent outline-none text-slate-800 font-black placeholder:text-slate-400 placeholder:font-bold text-xl"
+                  placeholder="Zip Code (e.g. 94107)"
+                  className="flex-1 py-5 bg-transparent outline-none text-slate-800 font-black placeholder:text-slate-400 placeholder:font-bold text-base sm:text-lg md:text-xl"
                   value={zip}
                   onChange={handleZipChange}
                   onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
@@ -233,7 +233,7 @@ export default function AmbulanceCost() {
               <button 
                 onClick={() => handleSearch()}
                 disabled={loading}
-                className="py-5 w-full sm:w-[220px] flex justify-center items-center bg-blue-600 hover:bg-blue-500 border border-white/20 text-white font-black text-xl rounded-2xl transition-all shadow-xl shadow-blue-500/20 disabled:opacity-50 active:scale-[0.98] whitespace-nowrap"
+                className="py-5 w-full sm:w-[220px] flex justify-center items-center bg-blue-600 hover:bg-blue-500 border border-white/20 text-white font-black text-lg sm:text-xl rounded-2xl transition-all shadow-xl shadow-blue-500/20 disabled:opacity-50 active:scale-[0.98] whitespace-nowrap"
               >
                 {loading ? (
                   <div className="flex items-center gap-2">

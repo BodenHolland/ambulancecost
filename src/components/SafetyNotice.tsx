@@ -10,20 +10,39 @@ function cn(...inputs: ClassValue[]) {
 }
 
 export default function SafetyNotice() {
+  const [mounted, setMounted] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [hasBanner, setHasBanner] = useState(true);
 
   useEffect(() => {
+    setMounted(true);
     const acknowledged = localStorage.getItem('ambulancecost_safety_ack');
     if (!acknowledged) {
       setShowModal(true);
     }
   }, []);
 
+  // Lock body scroll when modal is active
+  useEffect(() => {
+    if (showModal) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.height = '100vh';
+    } else {
+      document.body.style.overflow = '';
+      document.body.style.height = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+      document.body.style.height = '';
+    };
+  }, [showModal]);
+
   const handleContinue = () => {
     localStorage.setItem('ambulancecost_safety_ack', 'true');
     setShowModal(false);
   };
+
+  if (!mounted) return null;
 
   return (
     <>
@@ -45,8 +64,8 @@ export default function SafetyNotice() {
 
       {/* Emergency Notice Modal */}
       {showModal && (
-        <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-900/80 backdrop-blur-md animate-in fade-in duration-300">
-          <div className="bg-white rounded-t-[2rem] sm:rounded-[2.5rem] shadow-2xl max-w-lg w-full border-4 border-red-50 max-h-[92dvh] overflow-y-auto flex flex-col">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-slate-900/80 backdrop-blur-md animate-in fade-in duration-300">
+          <div className="bg-white rounded-[2rem] sm:rounded-[2.5rem] shadow-2xl max-w-lg w-full border-4 border-red-50 max-h-[90dvh] overflow-y-auto flex flex-col relative animate-in zoom-in-95 duration-300">
             <div className="bg-red-50 p-5 sm:p-8 flex items-center gap-3 sm:gap-4 border-b border-red-100 flex-shrink-0">
               <div className="w-12 h-12 sm:w-16 sm:h-16 bg-red-600 rounded-2xl sm:rounded-3xl flex items-center justify-center text-white shadow-lg shadow-red-600/20 flex-shrink-0">
                 <ShieldAlert className="w-6 h-6 sm:w-8 sm:h-8" />
