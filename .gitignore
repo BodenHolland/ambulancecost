@@ -39,3 +39,15 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# data & scripts
+*.db
+*.sql
+*.csv
+*.xlsx
+*.zip
+/data/communityRates.json
+/data/inaccuracies.json
+A0429
+Carrier
+wrangler.toml
