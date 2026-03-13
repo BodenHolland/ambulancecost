@@ -265,7 +265,7 @@ export default function AmbulanceCost() {
               >
                 <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> New Search
               </button>
-              <h1 className="text-3xl md:text-5xl font-black text-slate-900 tracking-tight">
+              <h1 className="text-2xl sm:text-3xl md:text-5xl font-black text-slate-900 tracking-tight break-words">
                 {result.data.city}, {result.data.state}
               </h1>
               <div className="flex items-center gap-3 mt-2">
@@ -323,7 +323,7 @@ export default function AmbulanceCost() {
                             Reported Local Rate: {result?.data.city}
                           </div>
                           <div className="flex items-baseline gap-2">
-                            <span className="text-5xl font-black text-emerald-600">
+                            <span className="text-4xl md:text-5xl font-black text-emerald-600">
                               {typeof matchLocal.tntFee === 'number' ? `$${matchLocal.tntFee}` : matchLocal.tntFee}
                             </span>
                             <span className="text-emerald-900/40 font-black text-xs uppercase tracking-tighter">TNT Fee</span>
@@ -372,7 +372,7 @@ export default function AmbulanceCost() {
                             Reported User Rate: {result?.data.city}
                           </div>
                           <div className="flex items-baseline gap-2">
-                            <span className="text-5xl font-black text-slate-800">
+                            <span className="text-4xl md:text-5xl font-black text-slate-800">
                               ${matchCommunity.tntFee}
                             </span>
                             <span className="text-slate-400 font-black text-xs uppercase tracking-tighter">TNT Fee</span>
@@ -547,7 +547,7 @@ export default function AmbulanceCost() {
                   <div className="mb-8 text-center sm:text-left">
                     <div className="flex items-baseline justify-center sm:justify-start gap-1">
                       <span 
-                        className="font-black text-6xl md:text-8xl tracking-tighter drop-shadow-[0_0_15px_rgba(245,158,11,0.3)]" 
+                        className="font-black text-5xl md:text-7xl lg:text-8xl tracking-tighter drop-shadow-[0_0_15px_rgba(245,158,11,0.3)]" 
                         style={{ color: '#F59E0B' }}
                       >
                         ${(calculateEstimate(serviceType, 0, result.data.type, result.data.rates || null).baseRate * 3).toLocaleString(undefined, { maximumFractionDigits: 0 })}
@@ -605,10 +605,10 @@ export default function AmbulanceCost() {
                 
                 <div className="mb-10 text-center sm:text-left">
                   <div className="flex items-baseline justify-center sm:justify-start gap-1">
-                    <span className="text-slate-900 font-black text-6xl md:text-7xl tracking-tighter">
+                    <span className="text-slate-900 font-black text-5xl md:text-6xl lg:text-7xl tracking-tighter">
                       ${Math.floor(calculateEstimate(serviceType, 0, result.data.type, result.data.rates || null).baseRate).toLocaleString()}
                     </span>
-                    <span className="text-slate-400 font-black text-2xl">.{(calculateEstimate(serviceType, 0, result.data.type, result.data.rates || null).baseRate % 1).toFixed(2).substring(2)}</span>
+                    <span className="text-slate-400 font-black text-xl md:text-2xl">.{(calculateEstimate(serviceType, 0, result.data.type, result.data.rates || null).baseRate % 1).toFixed(2).substring(2)}</span>
                   </div>
                   <p className="text-slate-400 font-bold text-xs mt-2 uppercase tracking-wide">Official Schedule Base Rate</p>
                 </div>

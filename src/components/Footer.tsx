@@ -32,7 +32,7 @@ const Footer = () => {
   };
 
   return (
-    <footer className="bg-slate-950 text-slate-400 py-6 px-4 md:py-8 mt-16 md:mt-24">
+    <footer className="bg-slate-950 text-slate-400 pb-6 px-4 md:pb-8 pt-12 md:pt-20 mt-24 md:mt-32">
       <div className="max-w-7xl mx-auto">
         {/* Compact Brand Header */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-6 border-b border-slate-900 pb-4">
@@ -53,9 +53,6 @@ const Footer = () => {
             <h3 className="text-white font-bold text-base uppercase tracking-[0.2em] mb-2 flex items-center gap-2">
               <Scale className="w-5 h-5 text-blue-500" /> Disclaimer
             </h3>
-            <p className="text-base text-slate-400 leading-relaxed font-medium">
-              Mandatory legal notices regarding cost estimates and emergency medical care.
-            </p>
           </div>
 
           {/* Right side: Multi-column content */}
@@ -113,11 +110,7 @@ const Footer = () => {
               </>
             )}
 
-            <div className="w-1 h-1 bg-slate-800 rounded-full hidden sm:block" />
-            <div className="flex items-center gap-2 mt-2 sm:mt-0">
-              <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
-              <span className="hidden sm:inline">Live Data Feed Active</span>
-            </div>
+            <div className="w-1 h-1 bg-slate-800 rounded-full" />
           </div>
           
           {/* Right Side: Copyright */}
