@@ -470,10 +470,10 @@ export default function AmbulanceCost() {
                   )}
                   <div className="flex items-start gap-4 mb-4">
                     <div className={cn(
-                      "w-10 h-10 rounded-xl flex items-center justify-center transition-all flex-shrink-0 mt-1",
-                      serviceType === 'BLS' ? "bg-blue-100 text-blue-600" : "bg-white text-slate-400 shadow-sm"
+                      "w-10 h-10 rounded-xl flex items-center justify-center transition-all flex-shrink-0 mt-1 overflow-hidden",
+                      serviceType === 'BLS' ? "bg-blue-100" : "bg-white shadow-sm"
                     )}>
-                      <Ambulance className="w-5 h-5" />
+                      <img src="/emt-logo.png" alt="EMT Logo" className="w-6 h-6 object-contain" />
                     </div>
                     <div>
                       <h4 className="text-xl font-black text-slate-900 mb-1">Basic Care (BLS)</h4>
