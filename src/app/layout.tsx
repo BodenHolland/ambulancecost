@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   title: "AmbulanceCost | Ground Ambulance Rate Database",
   description: "Transparency for ground ambulance rates and Medicare benchmarks.",
   icons: {
-    icon: "/icon.png?v=2",
+    icon: "/icon.png?v=3",
   },
 };
 
