@@ -341,7 +341,7 @@ export default function AmbulanceCost() {
                         <div className="space-y-1 w-full">
                           <div className="flex items-center justify-between w-full mb-1">
                             <div className="flex items-center gap-2 text-emerald-600 font-black text-[10px] uppercase tracking-widest">
-                              Verified Local Rate: {result?.data.city}
+                                Reported Local Rate: {result?.data.city}
                             </div>
                             {verifiedTnt.source_url && (
                               <a 
@@ -358,7 +358,7 @@ export default function AmbulanceCost() {
                             <span className="text-4xl md:text-5xl font-black text-emerald-600">
                               ${verifiedTnt.tnt_fee}
                             </span>
-                            <span className="text-emerald-900/40 font-black text-xs uppercase tracking-tighter">Verified TNT Fee</span>
+                             <span className="text-emerald-900/40 font-black text-xs uppercase tracking-tighter">Reported TNT Fee</span>
                           </div>
                           <p className="text-slate-500 text-sm font-medium leading-relaxed w-full">
                             {verifiedTnt.description}
@@ -369,7 +369,7 @@ export default function AmbulanceCost() {
                           <div className="text-slate-500 text-sm font-medium leading-relaxed w-full border-t border-slate-100 pt-3 flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
                             <div className="flex flex-col gap-1 items-start">
                               <div className="flex flex-wrap gap-2 items-center">
-                                <span>Official rate verified by our team.</span>
+                                 <span>Official rate reported for this locality.</span>
                                 {verifiedTnt.source_url && (
                                   <a href={verifiedTnt.source_url} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline font-bold flex items-center gap-1 bg-blue-50 px-2 py-0.5 rounded text-[10px]">
                                     Source View <ExternalLink className="w-3 h-3" />
@@ -538,7 +538,7 @@ export default function AmbulanceCost() {
                         </p>
                         <div className="bg-blue-50 border border-blue-100 rounded-2xl p-5 mt-4 flex flex-col sm:flex-row items-center justify-between gap-6">
                           <p className="text-blue-900/80 text-sm leading-relaxed font-medium text-center sm:text-left flex-1">
-                            We are crowd-sourcing a national database to fill gaps in federal records. <strong>If you know the local policy or have recently been billed</strong>, please support this effort by submitting your rate. <Link href="/resources/where-we-get-data" className="underline font-bold hover:text-blue-700 transition-colors">Learn how we verify our data.</Link>
+                            We are crowd-sourcing a national database to fill gaps in federal records. <strong>If you know the local policy or have recently been billed</strong>, please support this effort by submitting your rate. <Link href="/resources/where-we-get-data" className="underline font-bold hover:text-blue-700 transition-colors">Learn how we source our data.</Link>
                           </p>
                           <button 
                             onClick={() => setIsModalOpen(true)}
@@ -654,7 +654,7 @@ export default function AmbulanceCost() {
                           className="font-bold text-[10px] uppercase tracking-[0.3em]" 
                           style={{ color: result.data.verified_market ? '#10B981' : '#9CA3AF' }}
                         >
-                          {result.data.verified_market ? 'Verified Local Rate' : 'Market Average'}
+                           {result.data.verified_market ? 'Reported Local Rate' : 'Market Average'}
                         </h2>
                         {result.data.verified_market?.source_url ? (
                           <a 
@@ -675,7 +675,7 @@ export default function AmbulanceCost() {
                         )}
                       </div>
                       <p className="text-white font-black text-xl md:text-2xl italic tracking-tight">
-                        {result.data.verified_market ? 'Verified Market Rate' : 'Estimated Market Rate'}
+                         {result.data.verified_market ? 'Reported Market Rate' : 'Estimated Market Rate'}
                       </p>
                     </div>
                   </div>
@@ -694,7 +694,7 @@ export default function AmbulanceCost() {
                       {!result.data.verified_market && <span className="font-black text-sm md:text-base opacity-40 uppercase tracking-widest ml-1" style={{ color: '#9CA3AF' }}>Est.</span>}
                     </div>
                     <p className="font-bold text-[11px] mt-2 uppercase tracking-[0.1em] italic" style={{ color: '#9CA3AF' }}>
-                      {result.data.verified_market ? 'Verified Base Rate' : 'Market Base Rate Estimate'}
+                       {result.data.verified_market ? 'Reported Base Rate' : 'Market Base Rate Estimate'}
                     </p>
                   </div>
 
@@ -703,8 +703,8 @@ export default function AmbulanceCost() {
                     style={{ color: '#9CA3AF', borderColor: result.data.verified_market ? '#10B98133' : '#F59E0B33' }}
                   >
                     {result.data.verified_market 
-                      ? `This rate was verified for ${result.data.city} on ${result.data.verified_market.verified_date}. It reflects the current billing schedule for local ambulance providers.`
-                      : 'This is the average price private ambulance companies and municipal departments charge for this service in your region. While Medicare sets a "floor," the Market Rate reflects the actual bill you are likely to receive before insurance adjustments.'}
+                       ? `This rate was reported for ${result.data.city} on ${result.data.verified_market.verified_date}. It reflects the current billing schedule for local ambulance providers.`
+                       : 'This is the average price private ambulance companies and municipal departments charge for this service in your region. While Medicare sets a "floor," the Market Rate reflects the actual bill you are likely to receive before insurance adjustments.'}
                   </p>
 
                   <div className="space-y-4 pt-8" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
