@@ -134,7 +134,13 @@ export async function GET(request: NextRequest) {
           als_super_rural: als?.super_rural_rate ?? null,
           mileage_urban:   mileage?.urban_rate   ?? null,
           mileage_rural:   mileage?.rural_rate   ?? null,
-        },
+        }
+      }, {
+        headers: {
+          'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0',
+        }
       });
     }
 

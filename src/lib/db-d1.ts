@@ -64,22 +64,22 @@ export class D1DbProvider implements DatabaseProvider {
     if (mapped) {
       return {
         ...mapped,
-        verified_tnt: mapped.tnt_fee > 0 ? {
+        verified_tnt: Number(mapped.tnt_fee) > 0 ? {
           city: mapped.display_name,
           state: '',
-          tnt_fee: mapped.tnt_fee,
+          tnt_fee: Number(mapped.tnt_fee),
           description: mapped.tnt_description,
           source_url: mapped.source_url,
           source_label: mapped.source_label,
           is_verified: 1,
           last_updated: mapped.last_verified || mapped.effective_date || mapped.last_updated
         } : null,
-        verified_market: (mapped.bls_base > 0 || mapped.als_base > 0) ? {
+        verified_market: (Number(mapped.bls_base) > 0 || Number(mapped.als_base) > 0) ? {
           zip_prefix: prefix,
           city: mapped.display_name,
-          bls_base: mapped.bls_base,
-          als_base: mapped.als_base,
-          mileage: mapped.mileage,
+          bls_base: Number(mapped.bls_base),
+          als_base: Number(mapped.als_base),
+          mileage: Number(mapped.mileage),
           source_url: mapped.source_url,
           source_label: mapped.source_label,
           verified_date: mapped.last_verified || mapped.effective_date || mapped.last_updated,
