@@ -1,0 +1,26 @@
+<svg width="1600" height="900" viewBox="0 0 1600 900" xmlns="http://www.w3.org/2000/svg">
+  <!-- Solid Vibrant Blue Background -->
+  <rect width="1600" height="900" fill="#2563eb" />
+  
+  <!-- Logo Container -->
+  <g transform="translate(420, 390)">
+    <!-- Icon Square (White for contrast against the blue background) -->
+    <rect x="0" y="0" width="120" height="120" rx="30" fill="#ffffff" /> 
+    
+    <!-- Ambulance Silhouette (Blue to match the background) -->
+    <g transform="translate(15, 20) scale(4)" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10 10c0-1.1.9-2 2-2h3l4 4h1a2 2 0 0 1 2 2v5" />
+      <path d="M20 19a3 3 0 0 1-6 0" />
+      <path d="M10 19a3 3 0 0 1-6 0" />
+      <path d="M4 19v-5a2 2 0 0 1 2-2h4v7" />
+      <path d="M10 14h10" />
+      <circle cx="7" cy="19" r="2" />
+      <circle cx="17" cy="19" r="2" />
+    </g>
+    
+    <!-- Company Name (White for contrast) -->
+    <text x="160" y="85" font-family="sans-serif" font-weight="900" font-size="96" letter-spacing="-0.02em">
+      <tspan fill="#ffffff">AmbulanceCost</tspan>
+    </text>
+  </g>
+</svg>

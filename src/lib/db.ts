@@ -12,14 +12,21 @@ export interface DatabaseProvider {
   addCommunityRate(rate: CommunityRate): Promise<void>;
   getInaccuracyReports(): Promise<InaccuracyReport[]>;
   addInaccuracyReport(report: InaccuracyReport): Promise<void>;
+  getUnifiedPricing(zip: string): Promise<any>;
 }
 
+let cachedDb: DatabaseProvider | null = null;
+
 export async function getDb(): Promise<DatabaseProvider> {
+  if (cachedDb) return cachedDb;
+
   if (process.env.NEXT_RUNTIME === 'nodejs') {
     const { NodeDbProvider } = await import('./db-node');
-    return new NodeDbProvider();
+    cachedDb = new NodeDbProvider();
+    return cachedDb;
   } else {
     const { D1DbProvider } = await import('./db-d1');
-    return new D1DbProvider();
+    cachedDb = new D1DbProvider();
+    return cachedDb;
   }
 }

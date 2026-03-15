@@ -5,191 +5,215 @@
     "bls_base": 2651.64,
     "mileage": 112.54,
     "source_url": "https://laserfiche.mountainview.gov/WebLink/DocView.aspx?id=277587&dbid=0&repo=CityDocuments",
-    "verified_date": "2026-03-12"
+    "verified_date": "2026-03-12",
+    "als_base": 0
   },
   {
     "zip_prefix": "733",
     "city": "Austin and Travis County",
-    "bls_base": 0.0,
+    "bls_base": 0,
     "mileage": 13.5,
     "source_url": "https://data.texas.gov/resource/ipyh-z9mx.csv",
-    "verified_date": "2026-03-12"
+    "verified_date": "2026-03-12",
+    "als_base": 0
   },
   {
     "zip_prefix": "750",
     "city": "Town of Fairview",
-    "bls_base": 1400.0,
-    "mileage": 24.0,
+    "bls_base": 1400,
+    "mileage": 24,
     "source_url": "https://data.texas.gov/resource/ipyh-z9mx.csv",
-    "verified_date": "2026-03-12"
+    "verified_date": "2026-03-12",
+    "als_base": 0
   },
   {
     "zip_prefix": "760",
     "city": "City of Mansfield",
-    "bls_base": 0.0,
-    "mileage": 20.0,
+    "bls_base": 0,
+    "mileage": 20,
     "source_url": "https://data.texas.gov/resource/ipyh-z9mx.csv",
-    "verified_date": "2026-03-12"
+    "verified_date": "2026-03-12",
+    "als_base": 0
   },
   {
     "zip_prefix": "761",
     "city": "City of Saginaw",
-    "bls_base": 1011.0,
-    "mileage": 27.0,
+    "bls_base": 1011,
+    "mileage": 27,
     "source_url": "https://data.texas.gov/resource/ipyh-z9mx.csv",
-    "verified_date": "2026-03-12"
+    "verified_date": "2026-03-12",
+    "als_base": 0
   },
   {
     "zip_prefix": "762",
     "city": "City of Bowie",
     "bls_base": 1327.17,
-    "mileage": 23.0,
+    "mileage": 23,
     "source_url": "https://data.texas.gov/resource/ipyh-z9mx.csv",
-    "verified_date": "2026-03-12"
+    "verified_date": "2026-03-12",
+    "als_base": 0
   },
   {
     "zip_prefix": "763",
     "city": "City of Bowie",
     "bls_base": 1327.17,
-    "mileage": 23.0,
+    "mileage": 23,
     "source_url": "https://data.texas.gov/resource/ipyh-z9mx.csv",
-    "verified_date": "2026-03-12"
+    "verified_date": "2026-03-12",
+    "als_base": 0
   },
   {
     "zip_prefix": "764",
     "city": "City of Bowie",
     "bls_base": 1327.17,
-    "mileage": 23.0,
+    "mileage": 23,
     "source_url": "https://data.texas.gov/resource/ipyh-z9mx.csv",
-    "verified_date": "2026-03-12"
+    "verified_date": "2026-03-12",
+    "als_base": 0
   },
   {
     "zip_prefix": "766",
     "city": "Bryan,Brazos,CHI St Joseph Regional Health EMS",
-    "bls_base": 1095.0,
-    "mileage": 23.0,
+    "bls_base": 1095,
+    "mileage": 23,
     "source_url": "https://data.texas.gov/resource/ipyh-z9mx.csv",
-    "verified_date": "2026-03-12"
+    "verified_date": "2026-03-12",
+    "als_base": 0
   },
   {
     "zip_prefix": "769",
     "city": "Crockett County",
-    "bls_base": 1400.0,
-    "mileage": 24.0,
+    "bls_base": 1400,
+    "mileage": 24,
     "source_url": "https://data.texas.gov/resource/ipyh-z9mx.csv",
-    "verified_date": "2026-03-12"
+    "verified_date": "2026-03-12",
+    "als_base": 0
   },
   {
     "zip_prefix": "770",
     "city": "Village Fire Department",
-    "bls_base": 1200.0,
-    "mileage": 24.0,
+    "bls_base": 1200,
+    "mileage": 24,
     "source_url": "https://data.texas.gov/resource/ipyh-z9mx.csv",
-    "verified_date": "2026-03-12"
+    "verified_date": "2026-03-12",
+    "als_base": 0
   },
   {
     "zip_prefix": "773",
     "city": "Bryan,Brazos,CHI St Joseph Regional Health EMS",
-    "bls_base": 1095.0,
-    "mileage": 23.0,
+    "bls_base": 1095,
+    "mileage": 23,
     "source_url": "https://data.texas.gov/resource/ipyh-z9mx.csv",
-    "verified_date": "2026-03-12"
+    "verified_date": "2026-03-12",
+    "als_base": 0
   },
   {
     "zip_prefix": "774",
     "city": "City of El Campo",
-    "bls_base": 1250.0,
-    "mileage": 25.0,
+    "bls_base": 1250,
+    "mileage": 25,
     "source_url": "https://data.texas.gov/resource/ipyh-z9mx.csv",
-    "verified_date": "2026-03-12"
+    "verified_date": "2026-03-12",
+    "als_base": 0
   },
   {
     "zip_prefix": "775",
     "city": "City of Baytown",
-    "bls_base": 0.0,
-    "mileage": 22.0,
+    "bls_base": 0,
+    "mileage": 22,
     "source_url": "https://data.texas.gov/resource/ipyh-z9mx.csv",
-    "verified_date": "2026-03-12"
+    "verified_date": "2026-03-12",
+    "als_base": 0
   },
   {
     "zip_prefix": "776",
     "city": "Hardin County ESD # 2 / Lumberton Fire & EMS",
-    "bls_base": 0.0,
-    "mileage": 24.0,
+    "bls_base": 0,
+    "mileage": 24,
     "source_url": "https://data.texas.gov/resource/ipyh-z9mx.csv",
-    "verified_date": "2026-03-12"
+    "verified_date": "2026-03-12",
+    "als_base": 0
   },
   {
     "zip_prefix": "778",
     "city": "Bryan,Brazos,CHI St Joseph Regional Health EMS",
-    "bls_base": 1095.0,
-    "mileage": 23.0,
+    "bls_base": 1095,
+    "mileage": 23,
     "source_url": "https://data.texas.gov/resource/ipyh-z9mx.csv",
-    "verified_date": "2026-03-12"
+    "verified_date": "2026-03-12",
+    "als_base": 0
   },
   {
     "zip_prefix": "779",
     "city": "City of Yoakum EMS",
-    "bls_base": 1400.0,
-    "mileage": 23.0,
+    "bls_base": 1400,
+    "mileage": 23,
     "source_url": "https://data.texas.gov/resource/ipyh-z9mx.csv",
-    "verified_date": "2026-03-12"
+    "verified_date": "2026-03-12",
+    "als_base": 0
   },
   {
     "zip_prefix": "780",
     "city": "Wilson County Emergency Services District 4",
-    "bls_base": 1300.0,
-    "mileage": 25.0,
+    "bls_base": 1300,
+    "mileage": 25,
     "source_url": "https://data.texas.gov/resource/ipyh-z9mx.csv",
-    "verified_date": "2026-03-12"
+    "verified_date": "2026-03-12",
+    "als_base": 0
   },
   {
     "zip_prefix": "781",
     "city": "City of Schertz EMS",
-    "bls_base": 1090.0,
-    "mileage": 25.0,
+    "bls_base": 1090,
+    "mileage": 25,
     "source_url": "https://data.texas.gov/resource/ipyh-z9mx.csv",
-    "verified_date": "2026-03-12"
+    "verified_date": "2026-03-12",
+    "als_base": 0
   },
   {
     "zip_prefix": "782",
     "city": "City of Schertz EMS",
-    "bls_base": 1090.0,
-    "mileage": 25.0,
+    "bls_base": 1090,
+    "mileage": 25,
     "source_url": "https://data.texas.gov/resource/ipyh-z9mx.csv",
-    "verified_date": "2026-03-12"
+    "verified_date": "2026-03-12",
+    "als_base": 0
   },
   {
     "zip_prefix": "785",
     "city": "City of Pharr",
-    "bls_base": 1400.0,
-    "mileage": 35.0,
+    "bls_base": 1400,
+    "mileage": 35,
     "source_url": "https://data.texas.gov/resource/ipyh-z9mx.csv",
-    "verified_date": "2026-03-12"
+    "verified_date": "2026-03-12",
+    "als_base": 0
   },
   {
     "zip_prefix": "786",
     "city": "Austin and Travis County",
-    "bls_base": 0.0,
+    "bls_base": 0,
     "mileage": 13.5,
     "source_url": "https://data.texas.gov/resource/ipyh-z9mx.csv",
-    "verified_date": "2026-03-12"
+    "verified_date": "2026-03-12",
+    "als_base": 0
   },
   {
     "zip_prefix": "787",
     "city": "Austin and Travis County",
-    "bls_base": 0.0,
+    "bls_base": 0,
     "mileage": 13.5,
     "source_url": "https://data.texas.gov/resource/ipyh-z9mx.csv",
-    "verified_date": "2026-03-12"
+    "verified_date": "2026-03-12",
+    "als_base": 0
   },
   {
     "zip_prefix": "789",
     "city": "Fayette County, Texas",
-    "bls_base": 1300.0,
-    "mileage": 24.0,
+    "bls_base": 1300,
+    "mileage": 24,
     "source_url": "https://data.texas.gov/resource/ipyh-z9mx.csv",
-    "verified_date": "2026-03-12"
+    "verified_date": "2026-03-12",
+    "als_base": 0
   },
   {
     "zip_prefix": "795",
@@ -197,47 +221,53 @@
     "bls_base": 1878.28,
     "mileage": 49.69,
     "source_url": "https://data.texas.gov/resource/ipyh-z9mx.csv",
-    "verified_date": "2026-03-12"
+    "verified_date": "2026-03-12",
+    "als_base": 0
   },
   {
     "zip_prefix": "797",
     "city": "Ward County EMS",
-    "bls_base": 1100.0,
-    "mileage": 24.0,
+    "bls_base": 1100,
+    "mileage": 24,
     "source_url": "https://data.texas.gov/resource/ipyh-z9mx.csv",
-    "verified_date": "2026-03-12"
+    "verified_date": "2026-03-12",
+    "als_base": 0
   },
   {
     "zip_prefix": "798",
     "city": "Fayette County, Texas",
-    "bls_base": 1300.0,
-    "mileage": 24.0,
+    "bls_base": 1300,
+    "mileage": 24,
     "source_url": "https://data.texas.gov/resource/ipyh-z9mx.csv",
-    "verified_date": "2026-03-12"
+    "verified_date": "2026-03-12",
+    "als_base": 0
   },
   {
     "zip_prefix": "988",
     "city": "Tonasket EMS District",
-    "bls_base": 1565.0,
-    "mileage": 38.0,
+    "bls_base": 1565,
+    "mileage": 38,
     "source_url": "https://data.wa.gov/resource/r9b2-b8ff.csv",
-    "verified_date": "2026-03-12"
+    "verified_date": "2026-03-12",
+    "als_base": 0
   },
   {
     "zip_prefix": "993",
     "city": "Walla Walla County Fire Protection District #5",
-    "bls_base": 850.0,
-    "mileage": 0.0,
+    "bls_base": 850,
+    "mileage": 0,
     "source_url": "https://data.wa.gov/resource/r9b2-b8ff.csv",
-    "verified_date": "2026-03-12"
+    "verified_date": "2026-03-12",
+    "als_base": 0
   },
   {
     "zip_prefix": "983",
     "city": "City of Buckley",
-    "bls_base": 0.0,
+    "bls_base": 0,
     "mileage": 41.94,
     "source_url": "https://data.wa.gov/resource/r9b2-b8ff.csv",
-    "verified_date": "2026-03-12"
+    "verified_date": "2026-03-12",
+    "als_base": 0
   },
   {
     "zip_prefix": "982",
@@ -245,15 +275,17 @@
     "bls_base": 1109.05,
     "mileage": 23.49,
     "source_url": "https://data.wa.gov/resource/r9b2-b8ff.csv",
-    "verified_date": "2026-03-12"
+    "verified_date": "2026-03-12",
+    "als_base": 0
   },
   {
     "zip_prefix": "991",
     "city": "Whitman County Fire District 12",
-    "bls_base": 850.0,
-    "mileage": 0.0,
+    "bls_base": 850,
+    "mileage": 0,
     "source_url": "https://data.wa.gov/resource/r9b2-b8ff.csv",
-    "verified_date": "2026-03-12"
+    "verified_date": "2026-03-12",
+    "als_base": 0
   },
   {
     "zip_prefix": "986",
@@ -261,15 +293,17 @@
     "bls_base": 1792.22,
     "mileage": 29.51,
     "source_url": "https://data.wa.gov/resource/r9b2-b8ff.csv",
-    "verified_date": "2026-03-12"
+    "verified_date": "2026-03-12",
+    "als_base": 0
   },
   {
     "zip_prefix": "980",
     "city": "City of Buckley",
-    "bls_base": 0.0,
+    "bls_base": 0,
     "mileage": 41.94,
     "source_url": "https://data.wa.gov/resource/r9b2-b8ff.csv",
-    "verified_date": "2026-03-12"
+    "verified_date": "2026-03-12",
+    "als_base": 0
   },
   {
     "zip_prefix": "989",
@@ -277,7 +311,8 @@
     "bls_base": 1118.3,
     "mileage": 24.27,
     "source_url": "https://data.wa.gov/resource/r9b2-b8ff.csv",
-    "verified_date": "2026-03-12"
+    "verified_date": "2026-03-12",
+    "als_base": 0
   },
   {
     "zip_prefix": "985",
@@ -285,15 +320,17 @@
     "bls_base": 1792.22,
     "mileage": 29.51,
     "source_url": "https://data.wa.gov/resource/r9b2-b8ff.csv",
-    "verified_date": "2026-03-12"
+    "verified_date": "2026-03-12",
+    "als_base": 0
   },
   {
     "zip_prefix": "984",
     "city": "Pierce County Fire District 13",
-    "bls_base": 1200.0,
-    "mileage": 25.0,
+    "bls_base": 1200,
+    "mileage": 25,
     "source_url": "https://data.wa.gov/resource/r9b2-b8ff.csv",
-    "verified_date": "2026-03-12"
+    "verified_date": "2026-03-12",
+    "als_base": 0
   },
   {
     "zip_prefix": "990",
@@ -301,7 +338,8 @@
     "bls_base": 5404.49,
     "mileage": 72.94,
     "source_url": "https://data.wa.gov/resource/r9b2-b8ff.csv",
-    "verified_date": "2026-03-12"
+    "verified_date": "2026-03-12",
+    "als_base": 0
   },
   {
     "zip_prefix": "992",
@@ -309,15 +347,17 @@
     "bls_base": 5404.49,
     "mileage": 72.94,
     "source_url": "https://data.wa.gov/resource/r9b2-b8ff.csv",
-    "verified_date": "2026-03-12"
+    "verified_date": "2026-03-12",
+    "als_base": 0
   },
   {
     "zip_prefix": "994",
     "city": "Lewiston Fire Department",
-    "bls_base": 286.0,
+    "bls_base": 286,
     "mileage": 16.5,
     "source_url": "https://data.wa.gov/resource/r9b2-b8ff.csv",
-    "verified_date": "2026-03-12"
+    "verified_date": "2026-03-12",
+    "als_base": 0
   },
   {
     "zip_prefix": "981",
@@ -325,6 +365,16 @@
     "bls_base": 3805.85,
     "mileage": 54.45,
     "source_url": "https://data.wa.gov/resource/r9b2-b8ff.csv",
+    "verified_date": "2026-03-12",
+    "als_base": 0
+  },
+  {
+    "zip_prefix": "941",
+    "city": "San Francisco",
+    "bls_base": 2427.75,
+    "als_base": 2854.20,
+    "mileage": 54.45,
+    "source_url": "https://sf-fire.org/services/ambulance-billing",
     "verified_date": "2026-03-12"
   }
 ]

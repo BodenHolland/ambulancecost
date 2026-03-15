@@ -39,4 +39,51 @@ export class D1DbProvider implements DatabaseProvider {
       'INSERT OR IGNORE INTO inaccuracy_reports (city, reportedAt) VALUES (?, ?)'
     ).bind(report.city, report.reportedAt).run();
   }
+
+  async getUnifiedPricing(zip: string) {
+    const prefix = zip.substring(0, 3);
+    
+    // Level 1: Direct Zip
+    let mapped = await this.db.prepare(`
+      SELECT e.* 
+      FROM zip_mappings m
+      JOIN pricing_entities e ON m.entity_id = e.id
+      WHERE m.zip = ?
+    `).bind(zip).first();
+
+    // Level 2: Prefix
+    if (!mapped) {
+      mapped = await this.db.prepare(`
+        SELECT e.* 
+        FROM prefix_mappings p
+        JOIN pricing_entities e ON p.entity_id = e.id
+        WHERE p.prefix = ?
+      `).bind(prefix).first();
+    }
+
+    if (mapped) {
+      return {
+        ...mapped,
+        verified_tnt: mapped.tnt_fee > 0 ? {
+          city: mapped.display_name,
+          state: '',
+          tnt_fee: mapped.tnt_fee,
+          description: mapped.tnt_description,
+          source_url: mapped.source_url,
+          is_verified: 1,
+          last_updated: mapped.last_updated
+        } : null,
+        verified_market: (mapped.bls_base > 0 || mapped.als_base > 0) ? {
+          zip_prefix: prefix,
+          city: mapped.display_name,
+          bls_base: mapped.bls_base,
+          als_base: mapped.als_base,
+          mileage: mapped.mileage,
+          source_url: mapped.source_url,
+          verified_date: mapped.last_updated
+        } : null
+      };
+    }
+    return null;
+  }
 }

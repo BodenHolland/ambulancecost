@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
 
-export const runtime = 'edge';
+// export const runtime = 'edge'; // Disabled for local SQLite development
 
 // Robust fallback: Zip Code prefix → State
 const ZIP_STATE_PREFIXES: Record<string, { state: string; name: string }> = {
@@ -94,6 +94,7 @@ export async function GET(request: NextRequest) {
 
     if (zipRow) {
       const afsRows = await db.getAfsRates(zipRow.contractor, zipRow.locality) as AfsRow[];
+      const unified = await db.getUnifiedPricing(zip);
 
       const byHcpcs: Record<string, AfsRow> = {};
       for (const r of afsRows) byHcpcs[r.hcpcs] = r;
@@ -115,6 +116,9 @@ export async function GET(request: NextRequest) {
         contractor:   zipRow.contractor,
         locality:     zipRow.locality,
         gpci:         bls?.gpci ?? als?.gpci ?? 1.0,
+        verified_tnt: unified?.verified_tnt || null,
+        verified_market: unified?.verified_market || null,
+        entity_info: unified ? { id: unified.id, name: unified.display_name } : null,
         rates: {
           bls_urban:       bls?.urban_rate       ?? null,
           bls_rural:       bls?.rural_rate       ?? null,

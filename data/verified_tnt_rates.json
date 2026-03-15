@@ -1,0 +1,52 @@
+[
+  {
+    "city": "San Francisco",
+    "state": "CA",
+    "zipUnits": ["94107", "94103", "94129"],
+    "tntFee": 568.0,
+    "description": "SFFD charges a 'Treatment without Transportation' fee for all medical assessments that don't result in transport.",
+    "sourceUrl": "https://sf-fire.org/services/ambulance-billing",
+    "isVerified": true,
+    "lastUpdated": "2026-03-12"
+  },
+  {
+    "city": "New York",
+    "state": "NY",
+    "zipUnits": ["10001"],
+    "tntFee": 630.0,
+    "description": "FDNY charges for 'Facilitation of Treatment in Place' (BLS rate). ALS treatment in place is $1,050.",
+    "sourceUrl": "https://www.nyc.gov/site/fdny/about/department-information/ambulance-charges.page",
+    "isVerified": true,
+    "lastUpdated": "2026-03-12"
+  },
+  {
+    "city": "Houston",
+    "state": "TX",
+    "zipUnits": ["77001"],
+    "tntFee": 201.28,
+    "description": "City-Wide Fee Schedule lists 'Treatment without transport' as a billable response fee.",
+    "sourceUrl": "https://www.houstontx.gov/finance/2026-city-wide-fee-schedule.pdf",
+    "isVerified": true,
+    "lastUpdated": "2026-03-12"
+  },
+  {
+    "city": "Los Angeles",
+    "state": "CA",
+    "zipUnits": ["90001"],
+    "tntFee": 50.0,
+    "description": "LA County maximum allowable rate for 'Response and treatment, no transport'.",
+    "sourceUrl": "https://lafd.org/about/ambulance-transportation-policies",
+    "isVerified": true,
+    "lastUpdated": "2026-03-12"
+  },
+  {
+    "city": "Chicago",
+    "state": "IL",
+    "zipUnits": ["60601"],
+    "tntFee": 1000.0,
+    "description": "Recent 2025 proposals recommended cost recovery for 'Treat-No-Transport' (TNT) services.",
+    "sourceUrl": "https://www.chicago.gov/city/en/depts/fin/supp_info/revenue/ambulance_bills.html",
+    "isVerified": true,
+    "lastUpdated": "2026-03-12"
+  }
+]

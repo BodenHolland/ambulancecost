@@ -36,6 +36,24 @@ interface ZipData {
   contractor?: string | null;
   locality?: string | null;
   gpci?: number | null;
+  verified_tnt?: {
+    city: string;
+    state: string;
+    tnt_fee: number;
+    description: string;
+    source_url: string;
+    is_verified: number;
+    last_updated: string;
+  } | null;
+  verified_market?: {
+    zip_prefix: string;
+    city: string;
+    bls_base: number;
+    als_base: number;
+    mileage: number;
+    source_url: string;
+    verified_date: string;
+  } | null;
   rates?: {
     bls_urban: number | null;
     bls_rural: number | null;
@@ -126,7 +144,7 @@ export default function AmbulanceCost() {
         }
       } else {
         const data: ZipData = await response.json();
-        const calc = calculateEstimate(serviceType, miles, data.type, data.rates || null);
+        const calc = calculateEstimate(serviceType, miles, data.type, data.rates || null, data.verified_market || null);
         setResult({ calc, data });
       }
     } catch (err) {
@@ -175,7 +193,7 @@ export default function AmbulanceCost() {
             const lookupRes = await fetch(`/api/lookup?zip=${postcode.substring(0, 5)}`);
             if (lookupRes.ok) {
               const zipData: ZipData = await lookupRes.json();
-              const calc = calculateEstimate(serviceType, miles, zipData.type, zipData.rates || null);
+              const calc = calculateEstimate(serviceType, miles, zipData.type, zipData.rates || null, zipData.verified_market || null);
               setResult({ calc, data: zipData });
             }
           }
@@ -310,8 +328,67 @@ export default function AmbulanceCost() {
               
               <div className="p-6 md:p-8">
                 {(() => {
-                  const matchLocal = result ? getLocalTNTData(result.data.city) : null;
-                  const matchCommunity = result && Array.isArray(communityRates) ? communityRates.find(r => r.city.toLowerCase() === result.data.city.toLowerCase()) : null;
+                  const verifiedTnt = result.data.verified_tnt;
+                  const matchLocal = !verifiedTnt ? getLocalTNTData(result.data.city) : null;
+                  const matchCommunity = !verifiedTnt && !matchLocal && Array.isArray(communityRates) ? communityRates.find(r => r.city.toLowerCase() === result.data.city.toLowerCase()) : null;
+
+                  if (verifiedTnt) {
+                    return (
+                      <div className="flex flex-col md:flex-row gap-6 items-start">
+                        <div className="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center flex-shrink-0">
+                          <ShieldCheck className="w-8 h-8" />
+                        </div>
+                        <div className="space-y-1 w-full">
+                          <div className="flex items-center justify-between w-full mb-1">
+                            <div className="flex items-center gap-2 text-emerald-600 font-black text-[10px] uppercase tracking-widest">
+                              Verified Local Rate: {result?.data.city}
+                            </div>
+                            {verifiedTnt.source_url && (
+                              <a 
+                                href={verifiedTnt.source_url} 
+                                target="_blank" 
+                                rel="noopener noreferrer" 
+                                className="text-emerald-600 hover:text-emerald-500 font-bold flex items-center gap-1 bg-emerald-50 px-2 py-0.5 rounded text-[9px] transition-colors"
+                              >
+                                Source <ExternalLink className="w-2.5 h-2.5" />
+                              </a>
+                            )}
+                          </div>
+                          <div className="flex items-baseline gap-2">
+                            <span className="text-4xl md:text-5xl font-black text-emerald-600">
+                              ${verifiedTnt.tnt_fee}
+                            </span>
+                            <span className="text-emerald-900/40 font-black text-xs uppercase tracking-tighter">Verified TNT Fee</span>
+                          </div>
+                          <p className="text-slate-500 text-sm font-medium leading-relaxed w-full">
+                            {verifiedTnt.description}
+                            <Link href="/resources/treatment-without-transport-explained" className="ml-2 text-blue-600 font-bold hover:underline inline-flex items-center gap-1 group/link">
+                              Is this covered? <ChevronRight className="w-3 h-3 group-hover/link:translate-x-0.5 transition-transform" />
+                            </Link>
+                          </p>
+                          <div className="text-slate-500 text-sm font-medium leading-relaxed w-full border-t border-slate-100 pt-3 flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
+                            <div className="flex flex-col gap-1 items-start">
+                              <div className="flex flex-wrap gap-2 items-center">
+                                <span>Official rate verified by our team.</span>
+                                {verifiedTnt.source_url && (
+                                  <a href={verifiedTnt.source_url} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline font-bold flex items-center gap-1 bg-blue-50 px-2 py-0.5 rounded text-[10px]">
+                                    Source View <ExternalLink className="w-3 h-3" />
+                                  </a>
+                                )}
+                              </div>
+                              <span className="text-[10px] text-slate-400 font-medium italic">Resource last updated on {verifiedTnt.last_updated}</span>
+                            </div>
+                            <button 
+                              onClick={() => setIsInaccuracyModalOpen(true)}
+                              className="text-[10px] text-slate-400 font-bold bg-slate-100/50 px-3 py-1 rounded-full hover:bg-slate-200 transition-colors whitespace-nowrap"
+                            >
+                              Report Inaccurate Data
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  }
 
                   if (matchLocal) {
                     return (
@@ -320,8 +397,20 @@ export default function AmbulanceCost() {
                           <ShieldCheck className="w-8 h-8" />
                         </div>
                         <div className="space-y-1 w-full">
-                          <div className="flex items-center gap-2 text-emerald-600 font-black text-[10px] uppercase tracking-widest">
-                            Reported Local Rate: {result?.data.city}
+                          <div className="flex items-center justify-between w-full mb-1">
+                            <div className="flex items-center gap-2 text-emerald-600 font-black text-[10px] uppercase tracking-widest">
+                              Reported Local Rate: {result?.data.city}
+                            </div>
+                            {matchLocal.sourceUrl && (
+                              <a 
+                                href={matchLocal.sourceUrl} 
+                                target="_blank" 
+                                rel="noopener noreferrer" 
+                                className="text-emerald-600 hover:text-emerald-500 font-bold flex items-center gap-1 bg-emerald-50 px-2 py-0.5 rounded text-[9px] transition-colors"
+                              >
+                                Source <ExternalLink className="w-2.5 h-2.5" />
+                              </a>
+                            )}
                           </div>
                           <div className="flex items-baseline gap-2">
                             <span className="text-4xl md:text-5xl font-black text-emerald-600">
@@ -339,6 +428,11 @@ export default function AmbulanceCost() {
                             <div className="flex flex-col gap-1 items-start">
                               <div className="flex flex-wrap gap-2 items-center">
                                 <span>{matchLocal.description}</span>
+                                {matchLocal.sourceUrl && (
+                                  <a href={matchLocal.sourceUrl} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline font-bold flex items-center gap-1 bg-blue-50 px-2 py-0.5 rounded text-[10px]">
+                                    Source View <ExternalLink className="w-3 h-3" />
+                                  </a>
+                                )}
                               </div>
                               <span className="text-[10px] text-slate-400 font-medium italic">Resource last updated on March 12, 2026</span>
                             </div>
@@ -369,8 +463,16 @@ export default function AmbulanceCost() {
                           <AlertTriangle className="w-8 h-8" />
                         </div>
                         <div className="space-y-1 w-full">
-                          <div className="flex items-center gap-2 text-slate-500 font-black text-[10px] uppercase tracking-widest">
-                            Reported User Rate: {result?.data.city}
+                          <div className="flex items-center justify-between w-full mb-1">
+                            <div className="flex items-center gap-2 text-slate-500 font-black text-[10px] uppercase tracking-widest">
+                              Reported User Rate: {result?.data.city}
+                            </div>
+                            <Link 
+                              href="/resources/where-we-get-data" 
+                              className="text-slate-400 hover:text-slate-500 font-bold flex items-center gap-1 bg-slate-100 px-2 py-0.5 rounded text-[9px] transition-colors"
+                            >
+                              Methodology <ExternalLink className="w-2.5 h-2.5" />
+                            </Link>
                           </div>
                           <div className="flex items-baseline gap-2">
                             <span className="text-4xl md:text-5xl font-black text-slate-800">
@@ -414,8 +516,16 @@ export default function AmbulanceCost() {
                         <ShieldAlert className="w-8 h-8" />
                       </div>
                       <div className="space-y-1 w-full">
-                        <div className="flex items-center gap-2 text-slate-400 font-black text-[10px] uppercase tracking-widest">
-                           Data Unavailable for {result?.data.city || 'Zip'}
+                        <div className="flex items-center justify-between w-full mb-1">
+                          <div className="flex items-center gap-2 text-slate-400 font-black text-[10px] uppercase tracking-widest">
+                             Data Unavailable for {result?.data.city || 'Zip'}
+                          </div>
+                          <Link 
+                            href="/resources/where-we-get-data" 
+                            className="text-slate-400 hover:text-slate-500 font-bold flex items-center gap-1 bg-slate-100 px-2 py-0.5 rounded text-[9px] transition-colors"
+                          >
+                            Methodology <ExternalLink className="w-2.5 h-2.5" />
+                          </Link>
                         </div>
                         <div className="flex items-baseline gap-2">
                           <span className="text-3xl font-black text-slate-300 uppercase italic">Rate Information Unavailable</span>
@@ -428,7 +538,7 @@ export default function AmbulanceCost() {
                         </p>
                         <div className="bg-blue-50 border border-blue-100 rounded-2xl p-5 mt-4 flex flex-col sm:flex-row items-center justify-between gap-6">
                           <p className="text-blue-900/80 text-sm leading-relaxed font-medium text-center sm:text-left flex-1">
-                            We are crowd-sourcing a national database. <strong>If you know the local policy or have recently been billed</strong>, please support this effort by submitting your rate.
+                            We are crowd-sourcing a national database to fill gaps in federal records. <strong>If you know the local policy or have recently been billed</strong>, please support this effort by submitting your rate. <Link href="/resources/where-we-get-data" className="underline font-bold hover:text-blue-700 transition-colors">Learn how we verify our data.</Link>
                           </p>
                           <button 
                             onClick={() => setIsModalOpen(true)}
@@ -530,18 +640,43 @@ export default function AmbulanceCost() {
                   <div className="flex items-center gap-4 mb-8">
                     <div 
                       className="w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110 duration-500" 
-                      style={{ backgroundColor: 'rgba(245, 158, 11, 0.1)' }}
+                      style={{ backgroundColor: result.data.verified_market ? 'rgba(16, 185, 129, 0.1)' : 'rgba(245, 158, 11, 0.1)' }}
                     >
-                      <TrendingUp className="w-6 h-6 md:w-8 md:h-8" style={{ color: '#F59E0B' }} />
+                      {result.data.verified_market ? (
+                        <ShieldCheck className="w-6 h-6 md:w-8 md:h-8 text-emerald-500" />
+                      ) : (
+                        <TrendingUp className="w-6 h-6 md:w-8 md:h-8 text-amber-500" />
+                      )}
                     </div>
-                    <div>
-                      <h2 
-                        className="font-bold text-[10px] uppercase tracking-[0.3em] mb-1" 
-                        style={{ color: '#9CA3AF' }}
-                      >
-                        Market Average
-                      </h2>
-                      <p className="text-white font-black text-xl md:text-2xl italic tracking-tight">Estimated Market Rate</p>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between mb-1">
+                        <h2 
+                          className="font-bold text-[10px] uppercase tracking-[0.3em]" 
+                          style={{ color: result.data.verified_market ? '#10B981' : '#9CA3AF' }}
+                        >
+                          {result.data.verified_market ? 'Verified Local Rate' : 'Market Average'}
+                        </h2>
+                        {result.data.verified_market?.source_url ? (
+                          <a 
+                            href={result.data.verified_market.source_url} 
+                            target="_blank" 
+                            rel="noopener noreferrer" 
+                            className="text-[10px] text-emerald-400 hover:text-emerald-300 font-bold flex items-center gap-1 bg-emerald-500/10 px-2 py-0.5 rounded transition-colors"
+                          >
+                            Source <ExternalLink className="w-2.5 h-2.5" />
+                          </a>
+                        ) : (
+                          <Link 
+                            href="/resources/where-we-get-data" 
+                            className="text-[10px] text-amber-400 hover:text-amber-300 font-bold flex items-center gap-1 bg-amber-500/10 px-2 py-0.5 rounded transition-colors"
+                          >
+                            Methodology <ExternalLink className="w-2.5 h-2.5" />
+                          </Link>
+                        )}
+                      </div>
+                      <p className="text-white font-black text-xl md:text-2xl italic tracking-tight">
+                        {result.data.verified_market ? 'Verified Market Rate' : 'Estimated Market Rate'}
+                      </p>
                     </div>
                   </div>
 
@@ -549,20 +684,27 @@ export default function AmbulanceCost() {
                     <div className="flex items-baseline justify-center sm:justify-start gap-1">
                       <span 
                         className="font-black text-5xl md:text-7xl lg:text-8xl tracking-tighter drop-shadow-[0_0_15px_rgba(245,158,11,0.3)]" 
-                        style={{ color: '#F59E0B' }}
+                        style={{ color: result.data.verified_market ? '#10B981' : '#F59E0B' }}
                       >
-                        ${(calculateEstimate(serviceType, 0, result.data.type, result.data.rates || null).baseRate * 3).toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                        ${(serviceType === 'ALS' 
+                            ? (result.data.verified_market?.als_base || (calculateEstimate(serviceType, 0, result.data.type, result.data.rates || null).baseRate * 3))
+                            : (result.data.verified_market?.bls_base || (calculateEstimate(serviceType, 0, result.data.type, result.data.rates || null).baseRate * 3))
+                          ).toLocaleString(undefined, { maximumFractionDigits: 0 })}
                       </span>
-                      <span className="font-black text-sm md:text-base opacity-40 uppercase tracking-widest ml-1" style={{ color: '#9CA3AF' }}>Est.</span>
+                      {!result.data.verified_market && <span className="font-black text-sm md:text-base opacity-40 uppercase tracking-widest ml-1" style={{ color: '#9CA3AF' }}>Est.</span>}
                     </div>
-                    <p className="font-bold text-[11px] mt-2 uppercase tracking-[0.1em] italic" style={{ color: '#9CA3AF' }}>Market Base Rate Estimate</p>
+                    <p className="font-bold text-[11px] mt-2 uppercase tracking-[0.1em] italic" style={{ color: '#9CA3AF' }}>
+                      {result.data.verified_market ? 'Verified Base Rate' : 'Market Base Rate Estimate'}
+                    </p>
                   </div>
 
                   <p 
-                    className="text-xs md:text-sm leading-relaxed mb-10 pl-5 border-l-2 border-amber-500/20" 
-                    style={{ color: '#9CA3AF' }}
+                    className="text-xs md:text-sm leading-relaxed mb-10 pl-5 border-l-2" 
+                    style={{ color: '#9CA3AF', borderColor: result.data.verified_market ? '#10B98133' : '#F59E0B33' }}
                   >
-                    This is the average price private ambulance companies and municipal departments charge for this service in your region. While Medicare sets a "floor," the Market Rate reflects the actual bill you are likely to receive before insurance adjustments. We calculate this by aggregating state-wide billing data and commercial insurance "allowed amounts" for 2026.
+                    {result.data.verified_market 
+                      ? `This rate was verified for ${result.data.city} on ${result.data.verified_market.verified_date}. It reflects the current billing schedule for local ambulance providers.`
+                      : 'This is the average price private ambulance companies and municipal departments charge for this service in your region. While Medicare sets a "floor," the Market Rate reflects the actual bill you are likely to receive before insurance adjustments.'}
                   </p>
 
                   <div className="space-y-4 pt-8" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
@@ -573,7 +715,7 @@ export default function AmbulanceCost() {
                       <div>
                         <span 
                           className="font-black text-[10px] uppercase tracking-widest block mb-1" 
-                          style={{ color: '#F59E0B' }}
+                          style={{ color: result.data.verified_market ? '#10B981' : '#F59E0B' }}
                         >
                           + Per Mile Transported
                         </span>
@@ -582,12 +724,26 @@ export default function AmbulanceCost() {
                       <div className="text-right">
                         <span 
                           className="font-black text-2xl md:text-4xl block leading-none" 
-                          style={{ color: '#F59E0B' }}
+                          style={{ color: result.data.verified_market ? '#10B981' : '#F59E0B' }}
                         >
-                          ${(calculateEstimate(serviceType, 1, result.data.type, result.data.rates || null).mileageRate * 3).toFixed(2)}
+                          ${(result.data.verified_market?.mileage || (calculateEstimate(serviceType, 1, result.data.type, result.data.rates || null).mileageRate * 3)).toFixed(2)}
                         </span>
                       </div>
                     </div>
+                  </div>
+
+                  <div className="mt-8 flex items-center justify-between border-t border-white/5 pt-6">
+                    <div className="flex flex-col">
+                      {result.data.verified_market?.verified_date && (
+                        <span className="text-[10px] text-slate-500 font-medium italic">Resource last updated: {result.data.verified_market.verified_date}</span>
+                      )}
+                    </div>
+                    <button 
+                      onClick={() => setIsInaccuracyModalOpen(true)}
+                      className="text-[10px] text-slate-400 font-bold bg-white/5 px-3 py-1.5 rounded-full hover:bg-white/10 transition-colors uppercase tracking-wider"
+                    >
+                      Report Inaccurate Data
+                    </button>
                   </div>
                 </div>
               </div>
@@ -705,7 +861,7 @@ export default function AmbulanceCost() {
               <AlertTriangle className="w-6 h-6 text-amber-600 flex-shrink-0 mt-1" />
               <p className="text-sm md:text-base text-amber-800/90 leading-relaxed font-medium">
                 <strong className="text-amber-900 mr-2">Disclaimer:</strong>
-                These estimates are for educational purposes only. Actual bills vary by insurance, provider, location, and services rendered. This tool does not provide legal, financial, or medical advice—always prioritize clinical safety over cost.
+                Estimated ambulance costs are based on publicly available fee schedules and regional averages. Actual charges may vary depending on the ambulance provider, service level, mileage, medical treatment provided, and insurance coverage. Providers in the same area may charge different rates for similar services. For details about coverage and out-of-pocket costs, contact your insurance provider.
               </p>
             </div>
           </div>

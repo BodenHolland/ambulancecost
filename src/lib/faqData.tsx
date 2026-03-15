@@ -1,4 +1,5 @@
 import React, { ReactNode } from 'react';
+import { Search, ShieldCheck, Database, Globe } from 'lucide-react';
 
 export interface FAQ {
   q: string;
@@ -128,6 +129,7 @@ export const faqs: FAQ[] = [
     slug: "where-we-get-data",
     q: "Where do we get our data?",
     a: "Our transport rates are calculated using the official CMS.gov (Centers for Medicare & Medicaid Services) CY 2026 Ambulance Fee Schedule. This is the federal standard for what the government will pay for emergency transport based on your specific zip code and locality type (Urban, Rural, or Super-Rural).",
+    updatedAt: "March 15, 2026",
     content: (
       <>
         <p>Our primary dataset is built directly from the official <strong>Centers for Medicare & Medicaid Services (CMS) CY 2026 Ambulance Fee Schedule (AFS)</strong>. This federally maintained database details the exact maximum allowable amounts the government will reimburse participating providers for ground and air ambulance transports across the United States.</p>
@@ -143,6 +145,45 @@ export const faqs: FAQ[] = [
           <li><strong>Rural Zones:</strong> Providers operating in rural areas receive a bonus modifier. This helps subsidize emergency networks that experience lower call volumes but must maintain 24/7 readiness over vast service areas.</li>
           <li><strong>Super-Rural Zones:</strong> The CMS identifies areas in the lowest 25th percentile of population density as 'Super-Rural'. Transports originating in these remote areas receive an additional 22.6% bonus multiplier to prevent the total collapse of local emergency infrastructure.</li>
         </ul>
+
+        <h3 className="text-2xl font-bold mt-10 mb-4 text-slate-900 flex items-center gap-2">
+          <Database className="w-8 h-8 text-emerald-500" />
+          Extending Our Reach: Crowdsourcing & Manual Research
+        </h3>
+        <p>While the CMS dataset provides the federal benchmark, we recognize that local rates—especially for "Treatment Without Transport" fees—are not always captured in federal schedules. To provide the most accurate picture, we supplement our database through two primary methods:</p>
+        
+        <div className="grid md:grid-cols-2 gap-6 mt-8 mb-8">
+          <div className="bg-emerald-50 p-6 rounded-2xl border border-emerald-100">
+            <h4 className="font-bold text-emerald-900 mb-2 flex items-center gap-2">
+              <Globe className="w-5 h-5" />
+              Community Crowdsourcing
+            </h4>
+            <p className="text-emerald-800/70 text-sm leading-relaxed">
+              If a ZIP code is not currently in our database, we invite users to submit their local rates. This helps us identify regional fee schedules that may not be publicly indexed.
+            </p>
+          </div>
+          <div className="bg-blue-50 p-6 rounded-2xl border border-blue-100">
+            <h4 className="font-bold text-blue-900 mb-2 flex items-center gap-2">
+              <Search className="w-5 h-5" />
+              Manual Verification
+            </h4>
+            <p className="text-blue-800/70 text-sm leading-relaxed">
+              Our team periodically performs manual searches of municipal fire department schedules and local ordinances to update the database. For every verified manual entry, we provide <strong>source links and the exact date the data was captured</strong> directly on the results page.
+            </p>
+          </div>
+        </div>
+
+        <div className="bg-slate-900 text-white p-8 rounded-[2rem] shadow-2xl relative overflow-hidden group">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 blur-[80px] rounded-full -mr-20 -mt-20" />
+          <h4 className="text-blue-400 font-black text-xs uppercase tracking-[0.3em] mb-4">Our Commitment</h4>
+          <p className="text-xl md:text-2xl font-bold leading-relaxed mb-6">
+            "Our goal is radical transparency. By combining federal benchmarks with verified local data, we aim to make ambulance billing as transparent and accessible as possible for every patient in the United States."
+          </p>
+          <div className="flex items-center gap-3 text-slate-400 text-sm">
+            <ShieldCheck className="w-5 h-5 text-emerald-500" />
+            <span>Verified & Updated Search Results</span>
+          </div>
+        </div>
       </>
     )
   },

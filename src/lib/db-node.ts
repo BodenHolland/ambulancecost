@@ -52,4 +52,55 @@ export class NodeDbProvider implements DatabaseProvider {
       fs.writeFileSync(this.inaccuracyPath, JSON.stringify(records, null, 2));
     }
   }
+
+  async getUnifiedPricing(zip: string) {
+    const prefix = zip.substring(0, 3);
+    
+    // Level 1: Check for Direct Zip Mapping
+    let mapped = this.db.prepare(`
+      SELECT e.* 
+      FROM zip_mappings m
+      JOIN pricing_entities e ON m.entity_id = e.id
+      WHERE m.zip = ?
+    `).get(zip);
+
+    // Level 2: Check for Regional Prefix Mapping
+    if (!mapped) {
+      mapped = this.db.prepare(`
+        SELECT e.* 
+        FROM prefix_mappings p
+        JOIN pricing_entities e ON p.entity_id = e.id
+        WHERE p.prefix = ?
+      `).get(prefix);
+    }
+
+    if (mapped) {
+      // Return in a structure consistent with expected API outputs
+      return {
+        ...mapped,
+        tnt_fee: mapped.tnt_fee || 0,
+        // Map fields to what the frontend expects for simplified compatibility
+        verified_tnt: mapped.tnt_fee > 0 ? {
+          city: mapped.display_name,
+          state: '', // Not strictly tracked in entities yet, empty safe
+          zip: zip,
+          tnt_fee: mapped.tnt_fee,
+          description: mapped.tnt_description,
+          source_url: mapped.source_url,
+          is_verified: 1,
+          last_updated: mapped.last_updated
+        } : null,
+        verified_market: (mapped.bls_base > 0 || mapped.als_base > 0) ? {
+          zip_prefix: prefix,
+          city: mapped.display_name,
+          bls_base: mapped.bls_base,
+          als_base: mapped.als_base,
+          mileage: mapped.mileage,
+          source_url: mapped.source_url,
+          verified_date: mapped.last_updated
+        } : null
+      };
+    }
+    return null;
+  }
 }
