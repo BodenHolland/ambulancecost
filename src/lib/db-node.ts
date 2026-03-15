@@ -78,7 +78,7 @@ export class NodeDbProvider implements DatabaseProvider {
       // Return in a structure consistent with expected API outputs
       return {
         ...mapped,
-        tnt_fee: mapped.tnt_fee || 0,
+        tnt_fee: mapped.tnt_fee ?? 0,
         // Map fields to what the frontend expects for simplified compatibility
         verified_tnt: mapped.tnt_fee > 0 ? {
           city: mapped.display_name,
@@ -87,8 +87,9 @@ export class NodeDbProvider implements DatabaseProvider {
           tnt_fee: mapped.tnt_fee,
           description: mapped.tnt_description,
           source_url: mapped.source_url,
+          source_label: mapped.source_label,
           is_verified: 1,
-          last_updated: mapped.last_updated
+          last_updated: mapped.last_verified || mapped.effective_date || mapped.last_updated
         } : null,
         verified_market: (mapped.bls_base > 0 || mapped.als_base > 0) ? {
           zip_prefix: prefix,
@@ -97,7 +98,9 @@ export class NodeDbProvider implements DatabaseProvider {
           als_base: mapped.als_base,
           mileage: mapped.mileage,
           source_url: mapped.source_url,
-          verified_date: mapped.last_updated
+          source_label: mapped.source_label,
+          verified_date: mapped.last_verified || mapped.effective_date || mapped.last_updated,
+          estimate_type: mapped.estimate_type
         } : null
       };
     }

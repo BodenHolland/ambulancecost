@@ -70,8 +70,9 @@ export class D1DbProvider implements DatabaseProvider {
           tnt_fee: mapped.tnt_fee,
           description: mapped.tnt_description,
           source_url: mapped.source_url,
+          source_label: mapped.source_label,
           is_verified: 1,
-          last_updated: mapped.last_updated
+          last_updated: mapped.last_verified || mapped.effective_date || mapped.last_updated
         } : null,
         verified_market: (mapped.bls_base > 0 || mapped.als_base > 0) ? {
           zip_prefix: prefix,
@@ -80,7 +81,9 @@ export class D1DbProvider implements DatabaseProvider {
           als_base: mapped.als_base,
           mileage: mapped.mileage,
           source_url: mapped.source_url,
-          verified_date: mapped.last_updated
+          source_label: mapped.source_label,
+          verified_date: mapped.last_verified || mapped.effective_date || mapped.last_updated,
+          estimate_type: mapped.estimate_type
         } : null
       };
     }

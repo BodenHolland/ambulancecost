@@ -42,6 +42,7 @@ interface ZipData {
     tnt_fee: number;
     description: string;
     source_url: string;
+    source_label?: string;
     is_verified: number;
     last_updated: string;
   } | null;
@@ -52,7 +53,9 @@ interface ZipData {
     als_base: number;
     mileage: number;
     source_url: string;
+    source_label?: string;
     verified_date: string;
+    estimate_type?: string;
   } | null;
   rates?: {
     bls_urban: number | null;
@@ -350,7 +353,7 @@ export default function AmbulanceCost() {
                                 rel="noopener noreferrer" 
                                 className="text-emerald-600 hover:text-emerald-500 font-bold flex items-center gap-1 bg-emerald-50 px-2 py-0.5 rounded text-[9px] transition-colors"
                               >
-                                Source <ExternalLink className="w-2.5 h-2.5" />
+                                {verifiedTnt.source_label || 'Source'} <ExternalLink className="w-2.5 h-2.5" />
                               </a>
                             )}
                           </div>
@@ -372,7 +375,7 @@ export default function AmbulanceCost() {
                                  <span>Official rate reported for this locality.</span>
                                 {verifiedTnt.source_url && (
                                   <a href={verifiedTnt.source_url} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline font-bold flex items-center gap-1 bg-blue-50 px-2 py-0.5 rounded text-[10px]">
-                                    Source View <ExternalLink className="w-3 h-3" />
+                                    {verifiedTnt.source_label || 'Source View'} <ExternalLink className="w-3 h-3" />
                                   </a>
                                 )}
                               </div>
@@ -663,7 +666,7 @@ export default function AmbulanceCost() {
                             rel="noopener noreferrer" 
                             className="text-[10px] text-emerald-400 hover:text-emerald-300 font-bold flex items-center gap-1 bg-emerald-500/10 px-2 py-0.5 rounded transition-colors"
                           >
-                            Source <ExternalLink className="w-2.5 h-2.5" />
+                            {result.data.verified_market.source_label || 'Source'} <ExternalLink className="w-2.5 h-2.5" />
                           </a>
                         ) : (
                           <Link 

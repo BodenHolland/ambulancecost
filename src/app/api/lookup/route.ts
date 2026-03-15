@@ -118,7 +118,13 @@ export async function GET(request: NextRequest) {
         gpci:         bls?.gpci ?? als?.gpci ?? 1.0,
         verified_tnt: unified?.verified_tnt || null,
         verified_market: unified?.verified_market || null,
-        entity_info: unified ? { id: unified.id, name: unified.display_name } : null,
+        entity_info: unified ? { 
+          id: unified.id, 
+          name: unified.display_name,
+          estimate_type: unified.estimate_type,
+          source_label: unified.source_label,
+          last_verified: unified.last_verified || unified.effective_date || unified.last_updated
+        } : null,
         rates: {
           bls_urban:       bls?.urban_rate       ?? null,
           bls_rural:       bls?.rural_rate       ?? null,
