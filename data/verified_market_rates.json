@@ -371,10 +371,10 @@
   {
     "zip_prefix": "941",
     "city": "San Francisco",
-    "bls_base": 2427.75,
-    "als_base": 2854.20,
-    "mileage": 54.45,
+    "bls_base": 2555.00,
+    "als_base": 2555.00,
+    "mileage": 49.00,
     "source_url": "https://sf-fire.org/services/ambulance-billing",
-    "verified_date": "2026-03-12"
+    "verified_date": "2026-03-15"
   }
 ]
