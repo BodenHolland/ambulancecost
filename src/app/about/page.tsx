@@ -1,15 +1,15 @@
 'use client';
 
 import React from 'react';
-import Link from 'next/link';
-import { Ambulance, ShieldAlert } from 'lucide-react';
+import { ShieldAlert } from 'lucide-react';
+import TakeAction from '@/components/TakeAction';
 
 export default function AboutPage() {
   return (
     <div className="min-h-screen bg-white text-slate-900 font-sans">
-      <main className="max-w-3xl mx-auto px-6 pt-20 pb-32">
+      <main className="max-w-3xl mx-auto px-6 pt-20 pb-10">
         <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-slate-900 mb-12 tracking-tight text-balance">
-          About <span className="text-blue-600">AmbulanceCost.com</span>
+          About <span className="text-blue-600">Us</span>
         </h1>
         
         <div className="space-y-8 text-xl text-slate-600 leading-relaxed">
@@ -46,7 +46,11 @@ export default function AboutPage() {
               </p>
             </div>
           </div>
-          
+
+          <p>
+            Emergency medical services are an essential part of the healthcare system. Improving public understanding of how these services are funded and billed may help support more informed conversations about policy and access to emergency care.
+          </p>
+
           <div className="bg-amber-50 border-l-4 border-amber-500 p-8 rounded-r-2xl my-12 shadow-sm">
             <h3 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
               <ShieldAlert className="w-6 h-6 text-amber-600" />
@@ -56,12 +60,12 @@ export default function AboutPage() {
               Nothing on this site should be used to decide whether to seek emergency medical care. <strong>If you believe you or someone else may be experiencing a medical emergency, call 911 immediately.</strong>
             </p>
           </div>
-
-          <p>
-            Emergency medical services are an essential part of the healthcare system. Improving public understanding of how these services are funded and billed may help support more informed conversations about policy and access to emergency care.
-          </p>
         </div>
       </main>
+
+      <div className="max-w-5xl mx-auto px-4 mb-20">
+        <TakeAction />
+      </div>
     </div>
   );
 }
