@@ -115,9 +115,10 @@ export default function AmbulanceCost() {
     }
   };
 
-  const handleSearch = async (e?: React.FormEvent) => {
+  const handleSearch = async (e?: React.FormEvent, zipOverride?: string) => {
     if (e) e.preventDefault();
-    if (!zip || zip.length < 5) {
+    const zipToSearch = zipOverride || zip;
+    if (!zipToSearch || zipToSearch.length < 5) {
       if (!showKeywordWarning) setError('Please enter a valid 5-digit zip code.');
       return;
     }
@@ -126,11 +127,11 @@ export default function AmbulanceCost() {
     setError(null);
 
     try {
-      const response = await fetch(`/api/lookup?zip=${zip}`);
+      const response = await fetch(`/api/lookup?zip=${zipToSearch}`);
       if (!response.ok) {
         // Fallback for demo/local if zip not in db or D1 not bound
         const fallback: ZipData = {
-          zip,
+          zip: zipToSearch,
           city: 'San Francisco',
           state: 'CA',
           type: 'urban',
@@ -190,19 +191,16 @@ export default function AmbulanceCost() {
           const data = await res.json();
           const postcode = data.address.postcode;
           if (postcode) {
-            setZip(postcode.substring(0, 5));
+            const cleanZip = postcode.substring(0, 5);
+            setZip(cleanZip);
             // Trigger search automatically after getting zip
-            // Note: setZip is async, so we use the postcode directly
-            const lookupRes = await fetch(`/api/lookup?zip=${postcode.substring(0, 5)}`);
-            if (lookupRes.ok) {
-              const zipData: ZipData = await lookupRes.json();
-              const calc = calculateEstimate(serviceType, miles, zipData.type, zipData.rates || null, zipData.verified_market || null);
-              setResult({ calc, data: zipData });
-            }
+            handleSearch(undefined, cleanZip);
+          } else {
+            setError('Failed to resolve your location to a Zip Code.');
+            setLoading(false);
           }
         } catch (err) {
           setError('Failed to resolve your location to a Zip Code.');
-        } finally {
           setLoading(false);
         }
       },

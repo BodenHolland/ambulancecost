@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Mail, Search, Users, ExternalLink, Loader2, MessageSquareText } from 'lucide-react';
+import { Mail, Search, Users, ExternalLink, Loader2, MessageSquareText, Navigation } from 'lucide-react';
 
 interface Representative {
   id: string;
@@ -29,12 +29,12 @@ export default function TakeAction({ initialZip = '' }: TakeActionProps) {
   React.useEffect(() => {
     if (initialZip && initialZip.length === 5) {
       setZip(initialZip);
+      findReps(initialZip);
     }
   }, [initialZip]);
 
-  const findReps = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (zip.length < 5) {
+  const findReps = async (zipToSearch: string) => {
+    if (zipToSearch.length < 5) {
       setError('Please enter a valid 5-digit ZIP code.');
       return;
     }
@@ -42,7 +42,7 @@ export default function TakeAction({ initialZip = '' }: TakeActionProps) {
     setLoading(true);
     setError('');
     try {
-      const response = await fetch(`https://api.5calls.org/v1/reps?location=${zip}`);
+      const response = await fetch(`https://api.5calls.org/v1/reps?location=${zipToSearch}`);
       if (!response.ok) throw new Error('Failed to fetch representatives');
       const data = await response.json();
       
@@ -60,6 +60,47 @@ export default function TakeAction({ initialZip = '' }: TakeActionProps) {
     } finally {
       setLoading(false);
     }
+  };
+
+  const useLocation = () => {
+    if (!navigator.geolocation) {
+      setError('Geolocation is not supported by your browser.');
+      return;
+    }
+
+    setLoading(true);
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        try {
+          const { latitude, longitude } = position.coords;
+          // Reverse geocode using OSM (free, no key needed for small use)
+          const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`);
+          const data = await res.json();
+          const postcode = data.address.postcode;
+          if (postcode) {
+            const cleanZip = postcode.substring(0, 5);
+            setZip(cleanZip);
+            // Trigger search automatically after getting zip
+            findReps(cleanZip);
+          } else {
+            setError('Failed to resolve your location to a Zip Code.');
+            setLoading(false);
+          }
+        } catch (err) {
+          setError('Failed to resolve your location to a Zip Code.');
+          setLoading(false);
+        }
+      },
+      () => {
+        setError('Unable to retrieve your location.');
+        setLoading(false);
+      }
+    );
+  };
+
+  const handleFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    findReps(zip);
   };
 
   const generateEmail = (rep: Representative) => {
@@ -107,17 +148,27 @@ Sincerely,
             Help us change the law. Contact your representative today.
           </p>
 
-          <form onSubmit={findReps} className="flex flex-col gap-4 mb-8">
+          <form onSubmit={handleFormSubmit} className="flex flex-col gap-4 mb-8">
             <div className="flex flex-col sm:flex-row gap-3">
-              <div className="relative flex-grow">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+              <div className="relative flex-grow flex items-center bg-white/10 border border-white/20 rounded-2xl overflow-hidden focus-within:ring-2 focus-within:ring-blue-500/50 transition-all">
+                <div className="pl-4 pr-3 py-4 flex items-center justify-center">
+                  <Search className="w-5 h-5 text-slate-400" />
+                </div>
                 <input 
                   type="text" 
                   value={zip}
                   onChange={(e) => setZip(e.target.value.replace(/\D/g, '').slice(0, 5))}
                   placeholder="Enter ZIP code..."
-                  className="w-full bg-white/10 border border-white/20 rounded-2xl py-4 pl-12 pr-4 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all text-lg font-bold"
+                  className="flex-grow bg-transparent py-4 text-white placeholder:text-slate-500 focus:outline-none text-lg font-bold"
                 />
+                <button 
+                  type="button"
+                  onClick={useLocation}
+                  className="p-4 text-blue-400 hover:bg-white/5 transition-colors border-l border-white/10"
+                  title="Use my location"
+                >
+                  <Navigation className="w-5 h-5" />
+                </button>
               </div>
               <button 
                 type="submit"
