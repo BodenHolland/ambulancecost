@@ -8,6 +8,7 @@ import { getLocalTNTData, LocalFeeData } from '@/lib/localData';
 import TakeAction from '@/components/TakeAction';
 import CommunitySubmissionModal from '@/components/CommunitySubmissionModal';
 import InaccuracyReportModal from '@/components/InaccuracyReportModal';
+import ResourceOverlay from '@/components/ResourceOverlay';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -86,6 +87,7 @@ export default function AmbulanceCost() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isInaccuracyModalOpen, setIsInaccuracyModalOpen] = useState(false);
   const [flaggedCities, setFlaggedCities] = useState<InaccuracyReport[]>([]);
+  const [activeResource, setActiveResource] = useState<string | null>(null);
 
   useEffect(() => {
     fetch('/api/community')
@@ -363,9 +365,9 @@ export default function AmbulanceCost() {
                           </div>
                           <p className="text-slate-500 text-sm font-medium leading-relaxed w-full">
                             {verifiedTnt.description}
-                            <Link href="/resources/treatment-without-transport-explained" className="ml-2 text-blue-600 font-bold hover:underline inline-flex items-center gap-1 group/link">
+                            <button onClick={() => setActiveResource('treatment-without-transport-explained')} className="ml-2 text-blue-600 font-bold hover:underline inline-flex items-center gap-1 group/link text-left">
                               Is this covered? <ChevronRight className="w-3 h-3 group-hover/link:translate-x-0.5 transition-transform" />
-                            </Link>
+                            </button>
                           </p>
                           <div className="text-slate-500 text-sm font-medium leading-relaxed w-full border-t border-slate-100 pt-3 flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
                             <div className="flex flex-col gap-1 items-start">
@@ -468,12 +470,12 @@ export default function AmbulanceCost() {
                             <div className="flex items-center gap-2 text-slate-500 font-black text-[10px] uppercase tracking-widest">
                               Reported User Rate: {result?.data.city}
                             </div>
-                            <Link 
-                              href="/resources/where-we-get-data" 
+                            <button 
+                              onClick={() => setActiveResource('where-we-get-data')} 
                               className="text-slate-400 hover:text-slate-500 font-bold flex items-center gap-1 bg-slate-100 px-2 py-0.5 rounded text-[9px] transition-colors"
                             >
                               Methodology <ExternalLink className="w-2.5 h-2.5" />
-                            </Link>
+                            </button>
                           </div>
                           <div className="flex items-baseline gap-2">
                             <span className="text-4xl md:text-5xl font-black text-slate-800">
@@ -539,7 +541,7 @@ export default function AmbulanceCost() {
                         </p>
                         <div className="bg-blue-50 border border-blue-100 rounded-2xl p-5 mt-4 flex flex-col sm:flex-row items-center justify-between gap-6">
                           <p className="text-blue-900/80 text-sm leading-relaxed font-medium text-center sm:text-left flex-1">
-                            We are crowd-sourcing a national database to fill gaps in federal records. <strong>If you know the local policy or have recently been billed</strong>, please support this effort by submitting your rate. <Link href="/resources/where-we-get-data" className="underline font-bold hover:text-blue-700 transition-colors">Learn how we source our data.</Link>
+                            We are crowd-sourcing a national database to fill gaps in federal records. <strong>If you know the local policy or have recently been billed</strong>, please support this effort by submitting your rate. <button onClick={() => setActiveResource('where-we-get-data')} className="underline font-bold hover:text-blue-700 transition-colors">Learn how we source our data.</button>
                           </p>
                           <button 
                             onClick={() => setIsModalOpen(true)}
@@ -559,9 +561,9 @@ export default function AmbulanceCost() {
             <div className="space-y-6">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between px-2 gap-2">
                 <h3 className="text-2xl font-black text-slate-900 tracking-tight">Select Transport Level</h3>
-                <Link href="/resources/bls-vs-als-differences" className="text-blue-600 font-bold text-sm hover:text-blue-800 transition-colors inline-flex items-center gap-1 group">
+                <button onClick={() => setActiveResource('bls-vs-als-differences')} className="text-blue-600 font-bold text-sm hover:text-blue-800 transition-colors inline-flex items-center gap-1 group text-left">
                   Learn more about the difference <ExternalLink className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </Link>
+                </button>
               </div>
               
               <div className="grid md:grid-cols-2 gap-6">
@@ -667,12 +669,12 @@ export default function AmbulanceCost() {
                             {result.data.verified_market.source_label || 'Source'} <ExternalLink className="w-2.5 h-2.5" />
                           </a>
                         ) : (
-                          <Link 
-                            href="/resources/where-we-get-data" 
+                          <button 
+                            onClick={() => setActiveResource('where-we-get-data')} 
                             className="text-[10px] text-amber-400 hover:text-amber-300 font-bold flex items-center gap-1 bg-amber-500/10 px-2 py-0.5 rounded transition-colors"
                           >
                             Methodology <ExternalLink className="w-2.5 h-2.5" />
-                          </Link>
+                          </button>
                         )}
                       </div>
                       <p className="text-white font-black text-xl md:text-2xl italic tracking-tight">
@@ -828,7 +830,7 @@ export default function AmbulanceCost() {
               </div>
 
               {/* Insurance Coverage Link */}
-              <Link href="/resources/does-insurance-cover-ambulance" className="group block h-full">
+              <button onClick={() => setActiveResource('does-insurance-cover-ambulance')} className="group block h-full text-left">
                 <div className="bg-gradient-to-br from-indigo-50 to-blue-50 p-6 md:p-8 rounded-[2.5rem] shadow-xl border border-indigo-100 relative overflow-hidden flex flex-col justify-center h-full transition-all hover:shadow-2xl hover:-translate-y-1 hover:border-indigo-300">
                   <div className="absolute -right-10 -bottom-10 opacity-5 group-hover:opacity-10 transition-opacity">
                     <FileText className="w-48 h-48" />
@@ -854,7 +856,7 @@ export default function AmbulanceCost() {
                     </div>
                   </div>
                 </div>
-              </Link>
+              </button>
             </div>
             
             {/* Combined Disclaimer */}
@@ -887,6 +889,12 @@ export default function AmbulanceCost() {
         onClose={() => setIsInaccuracyModalOpen(false)}
         city={result?.data.city || ''}
         onReport={handleReportInaccuracy}
+      />
+
+      <ResourceOverlay 
+        slug={activeResource || ''} 
+        isOpen={!!activeResource} 
+        onClose={() => setActiveResource(null)} 
       />
     </div>
   );

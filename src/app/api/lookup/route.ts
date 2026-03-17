@@ -89,12 +89,12 @@ export async function GET(request: NextRequest) {
   try {
     const db = await getDb();
     const zipRow = await db.getZipData(zip) as ZipRow | undefined;
+    const unified = await db.getUnifiedPricing(zip);
 
     let cityName: string | null = zipRow?.city ?? null;
 
     if (zipRow) {
       const afsRows = await db.getAfsRates(zipRow.contractor, zipRow.locality) as AfsRow[];
-      const unified = await db.getUnifiedPricing(zip);
 
       const byHcpcs: Record<string, AfsRow> = {};
       for (const r of afsRows) byHcpcs[r.hcpcs] = r;
@@ -149,16 +149,25 @@ export async function GET(request: NextRequest) {
     const locationInfo = (ZIP_STATE_PREFIXES as any)[prefix];
     cityName = await resolveCityFromZip(zip);
 
-    if (locationInfo) {
+    if (locationInfo || unified) {
       return NextResponse.json({
         zip,
-        city:         cityName ?? 'Detected Locality',
-        state:        locationInfo.state,
+        city:         cityName ?? unified?.display_name ?? 'Detected Locality',
+        state:        locationInfo?.state ?? '',
         type:         'urban',
-        is_protected: PROTECTED_STATES.includes(locationInfo.state) ? 1 : 0,
+        is_protected: locationInfo ? (PROTECTED_STATES.includes(locationInfo.state) ? 1 : 0) : 0,
         contractor:   null,
         locality:     null,
         gpci:         null,
+        verified_tnt: unified?.verified_tnt || null,
+        verified_market: unified?.verified_market || null,
+        entity_info: unified ? { 
+          id: unified.id, 
+          name: unified.display_name,
+          estimate_type: unified.estimate_type,
+          source_label: unified.source_label,
+          last_verified: unified.last_verified || unified.effective_date || unified.last_updated
+        } : null,
         rates:        null,
       });
     }

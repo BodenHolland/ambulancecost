@@ -30,6 +30,7 @@ const PROTECTED_STATES = new Set([
 const KNOWN_CITIES = {
   '94107': { city: 'San Francisco', state: 'CA' },
   '94103': { city: 'San Francisco', state: 'CA' },
+  '94110': { city: 'San Francisco', state: 'CA' },
   '94129': { city: 'San Francisco (Presidio)', state: 'CA' },
   '75201': { city: 'Dallas', state: 'TX' },
   '59001': { city: 'Absarokee', state: 'MT' },

@@ -43,13 +43,13 @@ const slugify = (text) => text.toLowerCase().replace(/ /g, '_').replace(/[^\w-]+
 const sfEntity = {
   id: 'san_francisco_fire_dept',
   display_name: 'San Francisco Fire Department',
-  bls_base: 2427.75,
-  als_base: 2854.20,
-  mileage: 54.45,
+  bls_base: 2555.00,
+  als_base: 2555.00,
+  mileage: 49.00,
   tnt_fee: 568.0,
   tnt_description: "SFFD charges a 'Treatment without Transportation' fee for all medical assessments that don't result in transport.",
   source_url: 'https://sf-fire.org/services/ambulance-billing',
-  last_updated: '2026-03-12'
+  last_updated: '2026-03-15'
 };
 
 const insertEntity = db.prepare(`
@@ -61,7 +61,7 @@ insertEntity.run(sfEntity);
 db.prepare("INSERT OR REPLACE INTO prefix_mappings (prefix, entity_id) VALUES ('941', 'san_francisco_fire_dept')").run();
 
 // Map common SF zips directly
-['94107', '94103', '94129', '94143'].forEach(zip => {
+['94107', '94103', '94110', '94129', '94143'].forEach(zip => {
   db.prepare("INSERT OR REPLACE INTO zip_mappings (zip, entity_id) VALUES (?, ?)").run(zip, 'san_francisco_fire_dept');
 });
 

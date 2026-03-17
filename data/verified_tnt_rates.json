@@ -2,7 +2,7 @@
   {
     "city": "San Francisco",
     "state": "CA",
-    "zipUnits": ["94107", "94103", "94129"],
+    "zipUnits": ["94107", "94103", "94110", "94129"],
     "tntFee": 568.0,
     "description": "SFFD charges a 'Treatment without Transportation' fee for all medical assessments that don't result in transport.",
     "sourceUrl": "https://sf-fire.org/services/ambulance-billing",
