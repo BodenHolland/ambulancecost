@@ -178,8 +178,15 @@ export async function GET(request: NextRequest) {
     }
 
     return NextResponse.json({
-      zip, city: 'USA', state: 'US', type: 'urban',
-      is_protected: 0, contractor: null, locality: null, gpci: null, rates: null,
+      zip, 
+      city: finalCity ?? 'Unknown Locality', 
+      state: locationInfo?.state ?? 'US', 
+      type: 'urban',
+      is_protected: 0, 
+      contractor: null, 
+      locality: null, 
+      gpci: null, 
+      rates: null,
     });
 
   } catch (error: any) {
