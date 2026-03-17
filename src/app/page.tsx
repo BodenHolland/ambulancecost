@@ -131,22 +131,10 @@ export default function AmbulanceCost() {
     try {
       const response = await fetch(`/api/lookup?zip=${zipToSearch}`);
       if (!response.ok) {
-        // Fallback for demo/local if zip not in db or D1 not bound
-        const fallback: ZipData = {
-          zip: zipToSearch,
-          city: 'San Francisco',
-          state: 'CA',
-          type: 'urban',
-          is_protected: 1,
-          rates: null
-        };
-        const calc = calculateEstimate(serviceType, miles, 'urban', null);
-        setResult({ calc, data: fallback });
-        
         if (response.status === 404) {
           setError('Zip code not in 2026 database. Showing urban estimates.');
         } else {
-          setError('Could not connect to database. Showing sample data.');
+          setError('Could not connect to database. Showing limited information.');
         }
       } else {
         const data: ZipData = await response.json();

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
 
-export const runtime = 'edge';
+export const runtime = 'nodejs';
 
 // Robust fallback: Zip Code prefix → State
 const ZIP_STATE_PREFIXES: Record<string, { state: string; name: string }> = {
@@ -147,12 +147,17 @@ export async function GET(request: NextRequest) {
     // ── Fallback ──
     const prefix = zip.substring(0, 2);
     const locationInfo = (ZIP_STATE_PREFIXES as any)[prefix];
-    cityName = await resolveCityFromZip(zip);
+    
+    // Always try to resolve city if missing
+    let finalCity = cityName;
+    if (!finalCity) {
+      finalCity = await resolveCityFromZip(zip);
+    }
 
-    if (locationInfo || unified) {
+    if (locationInfo || unified || finalCity) {
       return NextResponse.json({
         zip,
-        city:         cityName ?? unified?.display_name ?? 'Detected Locality',
+        city:         finalCity ?? unified?.display_name ?? 'Detected Locality',
         state:        locationInfo?.state ?? '',
         type:         'urban',
         is_protected: locationInfo ? (PROTECTED_STATES.includes(locationInfo.state) ? 1 : 0) : 0,
@@ -177,23 +182,23 @@ export async function GET(request: NextRequest) {
       is_protected: 0, contractor: null, locality: null, gpci: null, rates: null,
     });
 
-  } catch (error) {
+  } catch (error: any) {
     console.error('Lookup error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
 async function resolveCityFromZip(zip: string): Promise<string | null> {
   try {
-    const res = await fetch(
-      `https://nominatim.openstreetmap.org/search?postalcode=${zip}&country=USA&format=json&addressdetails=1&limit=1`,
-      { headers: { 'User-Agent': 'AmbulanceCostApp/1.0' } }
-    );
+    const url = `https://nominatim.openstreetmap.org/search?postalcode=${zip}&country=USA&format=json&addressdetails=1&limit=1`;
+    const res = await fetch(url, { headers: { 'User-Agent': 'AmbulanceCostApp/1.0' } });
     if (!res.ok) return null;
     const data = await res.json();
     if (data?.length > 0 && data[0].address) {
       const a = data[0].address;
       return a.city || a.town || a.village || a.municipality || a.county || null;
     }
-  } catch { /* ignore */ }
+  } catch (err: any) { 
+    console.error('OSM Fetch Error:', err.message);
+  }
   return null;
 }

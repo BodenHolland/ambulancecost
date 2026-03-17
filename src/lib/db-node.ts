@@ -17,13 +17,23 @@ export class NodeDbProvider implements DatabaseProvider {
   }
 
   async getZipData(zip: string) {
-    return this.db.prepare('SELECT * FROM zip_data WHERE zip = ?').get(zip);
+    try {
+      return this.db.prepare('SELECT * FROM zip_data WHERE zip = ?').get(zip);
+    } catch (e) {
+      console.warn('zip_data table not found, falling back to unified pricing.');
+      return null;
+    }
   }
 
   async getAfsRates(contractor: string, locality: string) {
-    return this.db.prepare(
-      'SELECT hcpcs, gpci, urban_rate, rural_rate, super_rural_rate FROM afs_rates WHERE contractor = ? AND locality = ?'
-    ).all(contractor, locality);
+    try {
+      return this.db.prepare(
+        'SELECT hcpcs, gpci, urban_rate, rural_rate, super_rural_rate FROM afs_rates WHERE contractor = ? AND locality = ?'
+      ).all(contractor, locality);
+    } catch (e) {
+      console.warn('afs_rates table not found.');
+      return [];
+    }
   }
 
   async getCommunityRates(): Promise<CommunityRate[]> {
