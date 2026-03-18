@@ -157,7 +157,7 @@ export async function GET(request: NextRequest) {
     if (locationInfo || unified || finalCity) {
       return NextResponse.json({
         zip,
-        city:         finalCity ?? unified?.display_name ?? 'Detected Locality',
+        city:         unified?.display_name ?? finalCity ?? 'Detected Locality',
         state:        locationInfo?.state ?? '',
         type:         'urban',
         is_protected: locationInfo ? (PROTECTED_STATES.includes(locationInfo.state) ? 1 : 0) : 0,
