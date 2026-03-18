@@ -122,7 +122,10 @@ export async function GET(request: NextRequest) {
           id: unified.id, 
           name: unified.display_name,
           estimate_type: unified.estimate_type,
+          match_level: unified.match_level,
           source_label: unified.source_label,
+          effective_date: unified.effective_date,
+          notes: unified.notes,
           last_verified: unified.last_verified || unified.effective_date || unified.last_updated
         } : null,
         rates: {
@@ -170,7 +173,10 @@ export async function GET(request: NextRequest) {
           id: unified.id, 
           name: unified.display_name,
           estimate_type: unified.estimate_type,
+          match_level: unified.match_level,
           source_label: unified.source_label,
+          effective_date: unified.effective_date,
+          notes: unified.notes,
           last_verified: unified.last_verified || unified.effective_date || unified.last_updated
         } : null,
         rates:        null,

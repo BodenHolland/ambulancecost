@@ -50,13 +50,25 @@ interface ZipData {
   verified_market?: {
     zip_prefix: string;
     city: string;
-    bls_base: number;
-    als_base: number;
-    mileage: number;
+    bls_base: number | null;
+    als_base: number | null;
+    mileage: number | null;
     source_url: string;
     source_label?: string;
+    notes?: string | null;
     verified_date: string;
     estimate_type?: string;
+    match_level?: string | null;
+  } | null;
+  entity_info?: {
+    id: string;
+    name: string;
+    estimate_type?: string;
+    match_level?: string | null;
+    source_label?: string | null;
+    effective_date?: string | null;
+    notes?: string | null;
+    last_verified?: string | null;
   } | null;
   rates?: {
     bls_urban: number | null;
@@ -668,6 +680,25 @@ export default function AmbulanceCost() {
                       <p className="text-white font-black text-xl md:text-2xl italic tracking-tight">
                          {result.data.verified_market ? 'Reported Market Rate' : 'Estimated Market Rate'}
                       </p>
+                      {/* Estimate Source Badge */}
+                      {(() => {
+                        const ml = result.data.entity_info?.match_level || result.data.verified_market?.match_level;
+                        if (!ml) return null;
+                        const labels: Record<string, { text: string; color: string; bg: string }> = {
+                          zip:               { text: '✓ Exact ZIP Match',          color: '#10B981', bg: 'rgba(16,185,129,0.12)' },
+                          prefix:            { text: '≈ Regional Prefix Match',    color: '#60A5FA', bg: 'rgba(96,165,250,0.12)' },
+                          statewide_average: { text: '~ Statewide Avg (Estimated)',color: '#FBBF24', bg: 'rgba(251,191,36,0.12)'  },
+                          national_average:  { text: '~ National Avg (Estimated)', color: '#F87171', bg: 'rgba(248,113,113,0.12)' },
+                        };
+                        const badge = labels[ml];
+                        if (!badge) return null;
+                        return (
+                          <span className="inline-block mt-1 px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-widest"
+                            style={{ color: badge.color, backgroundColor: badge.bg }}>
+                            {badge.text}
+                          </span>
+                        );
+                      })()}
                     </div>
                   </div>
 
@@ -724,9 +755,17 @@ export default function AmbulanceCost() {
                   </div>
 
                   <div className="mt-8 flex items-center justify-between border-t border-white/5 pt-6">
-                    <div className="flex flex-col">
+                    <div className="flex flex-col gap-0.5">
                       {result.data.verified_market?.verified_date && (
-                        <span className="text-[10px] text-slate-500 font-medium italic">Resource last updated: {result.data.verified_market.verified_date}</span>
+                        <span className="text-[10px] text-slate-500 font-medium italic">Last updated: {result.data.verified_market.verified_date}</span>
+                      )}
+                      {result.data.entity_info?.effective_date && (
+                        <span className="text-[10px] text-slate-500 font-medium italic">Effective: {result.data.entity_info.effective_date}</span>
+                      )}
+                      {(result.data.entity_info?.notes || result.data.verified_market?.notes) && (
+                        <p className="text-[10px] text-slate-400 font-medium italic mt-1 max-w-[220px]">
+                          {result.data.entity_info?.notes || result.data.verified_market?.notes}
+                        </p>
                       )}
                     </div>
                     <button 

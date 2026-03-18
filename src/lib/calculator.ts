@@ -50,7 +50,7 @@ export function calculateEstimate(
   miles: number,
   localityType: LocalityType,
   afsRates?: AfsRates | null,
-  verifiedMarket?: { bls_base: number; als_base?: number; mileage: number } | null
+  verifiedMarket?: { bls_base: number | null; als_base?: number | null; mileage: number | null } | null
 ): CalculationResult {
   let finalBaseRate: number;
   let finalMileageRate: number;
@@ -112,11 +112,11 @@ export function calculateEstimate(
   let privatePrice: number;
   if (verifiedMarket) {
     // Pick the correct base override based on service type (BLS or ALS)
-    const baseValue = type === 'ALS' ? (verifiedMarket.als_base || 0) : verifiedMarket.bls_base;
+    const baseValue = type === 'ALS' ? (verifiedMarket.als_base ?? 0) : (verifiedMarket.bls_base ?? 0);
     
-    // Only override if the value is non-zero, otherwise fall back to 3x Medicare for that specific component
+    // Only override if the value is non-zero/non-null, otherwise fall back to 3× Medicare
     const baseOverride = baseValue > 0 ? baseValue : (finalBaseRate * 3);
-    const mileageOverride = (verifiedMarket.mileage > 0 ? verifiedMarket.mileage : (finalMileageRate / miles * 3 || 25)) * miles;
+    const mileageOverride = ((verifiedMarket.mileage ?? 0) > 0 ? (verifiedMarket.mileage as number) : (finalMileageRate / miles * 3 || 25)) * miles;
     
     privatePrice = baseOverride + mileageOverride;
   } else {

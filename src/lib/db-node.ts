@@ -65,16 +65,18 @@ export class NodeDbProvider implements DatabaseProvider {
 
   async getUnifiedPricing(zip: string) {
     const prefix = zip.substring(0, 3);
-    
-    // Level 1: Check for Direct Zip Mapping
+    let matchLevel: string | null = null;
+
+    // Level 1: Direct ZIP mapping
     let mapped = this.db.prepare(`
       SELECT e.* 
       FROM zip_mappings m
       JOIN pricing_entities e ON m.entity_id = e.id
       WHERE m.zip = ?
     `).get(zip);
+    if (mapped) matchLevel = 'zip';
 
-    // Level 2: Check for Regional Prefix Mapping
+    // Level 2: 3-digit prefix mapping
     if (!mapped) {
       mapped = this.db.prepare(`
         SELECT e.* 
@@ -82,36 +84,64 @@ export class NodeDbProvider implements DatabaseProvider {
         JOIN pricing_entities e ON p.entity_id = e.id
         WHERE p.prefix = ?
       `).get(prefix);
+      if (mapped) matchLevel = 'prefix';
+    }
+
+    // Level 3: Statewide average (derived from zip_data state column if available)
+    if (!mapped) {
+      const zipRow = this.db.prepare('SELECT state FROM zip_data WHERE zip = ?').get(zip) as { state: string } | undefined;
+      if (zipRow?.state) {
+        mapped = this.db.prepare(`
+          SELECT * FROM pricing_entities
+          WHERE estimate_type = 'statewide_average' AND state = ?
+          LIMIT 1
+        `).get(zipRow.state);
+        if (mapped) matchLevel = 'statewide_average';
+      }
+    }
+
+    // Level 4: National average fallback
+    if (!mapped) {
+      mapped = this.db.prepare(`
+        SELECT * FROM pricing_entities WHERE estimate_type = 'national_average' LIMIT 1
+      `).get();
+      if (mapped) matchLevel = 'national_average';
     }
 
     if (mapped) {
-      // Return in a structure consistent with expected API outputs
+      const blsBase  = mapped.bls_base  ?? null;
+      const alsBase  = mapped.als_base  ?? null;
+      const mileage  = mapped.mileage   ?? null;
+      const tntFee   = mapped.tnt_fee   ?? 0;
+
       return {
         ...mapped,
-        tnt_fee: mapped.tnt_fee ?? 0,
-        // Map fields to what the frontend expects for simplified compatibility
-        verified_tnt: mapped.tnt_fee > 0 ? {
+        match_level: matchLevel,
+        tnt_fee: tntFee,
+        verified_tnt: tntFee > 0 ? {
           city: mapped.display_name,
-          state: '', // Not strictly tracked in entities yet, empty safe
-          zip: zip,
-          tnt_fee: mapped.tnt_fee,
+          state: mapped.state ?? '',
+          zip,
+          tnt_fee: tntFee,
           description: mapped.tnt_description,
           source_url: mapped.source_url,
           source_label: mapped.source_label,
-          is_verified: 1,
-          last_updated: mapped.last_verified || mapped.effective_date || mapped.last_updated
+          is_verified: matchLevel === 'zip' || matchLevel === 'prefix' ? 1 : 0,
+          last_updated: mapped.last_verified || mapped.effective_date || mapped.last_updated,
         } : null,
-        verified_market: (mapped.bls_base > 0 || mapped.als_base > 0) ? {
+        verified_market: (blsBase !== null || alsBase !== null || mileage !== null) ? {
           zip_prefix: prefix,
           city: mapped.display_name,
-          bls_base: mapped.bls_base,
-          als_base: mapped.als_base,
-          mileage: mapped.mileage,
+          bls_base: blsBase,
+          als_base: alsBase,
+          mileage,
           source_url: mapped.source_url,
           source_label: mapped.source_label,
+          notes: mapped.notes,
           verified_date: mapped.last_verified || mapped.effective_date || mapped.last_updated,
-          estimate_type: mapped.estimate_type
-        } : null
+          estimate_type: mapped.estimate_type,
+          match_level: matchLevel,
+        } : null,
       };
     }
     return null;
