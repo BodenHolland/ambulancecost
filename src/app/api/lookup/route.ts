@@ -89,12 +89,42 @@ interface AfsRow {
     const zipRow = await db.getZipData(zip) as ZipRow | undefined;
     const unified = await db.getUnifiedPricing(zip);
 
+    // ── Resolve city name (single attempt, cached) ──
     let cityName: string | null = zipRow?.city ?? null;
+    const stateCode: string | null = zipRow?.state ?? null;
 
-    // OpenStreetMap Fallback: If DB is empty, try to resolve from a map service
-    if (zipRow && !cityName) {
+    if (!cityName) {
+      // Try OSM lookup once, then cache the result in D1
       cityName = await resolveCityFromZip(zip);
+      if (cityName && zipRow) {
+        // Fire-and-forget: cache the resolved city so future lookups skip OSM
+        db.cacheCity(zip, cityName).catch(() => {});
+      }
     }
+
+    // Final fallback for state: use the ZIP prefix → state map
+    const prefix2 = zip.substring(0, 2);
+    const locationInfo = ZIP_STATE_PREFIXES[prefix2];
+    const finalState = stateCode || locationInfo?.state || '';
+    const finalCity = cityName || locationInfo?.name || null;
+
+    // Build entity_info block (reused for both paths)
+    const entityInfo = unified ? {
+      id: unified.id,
+      name: unified.display_name,
+      estimate_type: unified.estimate_type,
+      match_level: unified.match_level,
+      source_label: unified.source_label,
+      effective_date: unified.effective_date,
+      notes: unified.notes,
+      last_verified: unified.last_verified || unified.effective_date || unified.last_updated
+    } : null;
+
+    const cacheHeaders = {
+      'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+      'Pragma': 'no-cache',
+      'Expires': '0',
+    };
 
     if (zipRow) {
       const afsRows = await db.getAfsRates(zipRow.contractor, zipRow.locality) as AfsRow[];
@@ -106,14 +136,10 @@ interface AfsRow {
       const als     = byHcpcs['A0427'];
       const mileage = byHcpcs['A0425'];
 
-      if (!cityName) {
-        cityName = await resolveCityFromZip(zip);
-      }
-
       return NextResponse.json({
         zip,
-        city:         cityName ?? 'Detected Locality',
-        state:        zipRow.state,
+        city:         finalCity ?? 'Detected Locality',
+        state:        finalState,
         type:         zipRow.type,
         is_protected: zipRow.is_protected,
         contractor:   zipRow.contractor,
@@ -121,16 +147,7 @@ interface AfsRow {
         gpci:         bls?.gpci ?? als?.gpci ?? 1.0,
         verified_tnt: unified?.verified_tnt || null,
         verified_market: unified?.verified_market || null,
-        entity_info: unified ? { 
-          id: unified.id, 
-          name: unified.display_name,
-          estimate_type: unified.estimate_type,
-          match_level: unified.match_level,
-          source_label: unified.source_label,
-          effective_date: unified.effective_date,
-          notes: unified.notes,
-          last_verified: unified.last_verified || unified.effective_date || unified.last_updated
-        } : null,
+        entity_info:  entityInfo,
         rates: {
           bls_urban:       bls?.urban_rate       ?? null,
           bls_rural:       bls?.rural_rate       ?? null,
@@ -141,62 +158,24 @@ interface AfsRow {
           mileage_urban:   mileage?.urban_rate   ?? null,
           mileage_rural:   mileage?.rural_rate   ?? null,
         }
-      }, {
-        headers: {
-          'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
-          'Pragma': 'no-cache',
-          'Expires': '0',
-        }
-      });
+      }, { headers: cacheHeaders });
     }
 
-    // ── Fallback ──
-    const prefix = zip.substring(0, 2);
-    const locationInfo = (ZIP_STATE_PREFIXES as any)[prefix];
-    
-    // Always try to resolve city if missing
-    let finalCity = cityName;
-    if (!finalCity) {
-      finalCity = await resolveCityFromZip(zip);
-    }
-
-    if (locationInfo || unified || finalCity) {
-      return NextResponse.json({
-        zip,
-        city:         unified?.display_name ?? finalCity ?? 'Detected Locality',
-        state:        locationInfo?.state ?? '',
-        type:         'urban',
-        is_protected: locationInfo ? (PROTECTED_STATES.includes(locationInfo.state) ? 1 : 0) : 0,
-        contractor:   null,
-        locality:     null,
-        gpci:         null,
-        verified_tnt: unified?.verified_tnt || null,
-        verified_market: unified?.verified_market || null,
-        entity_info: unified ? { 
-          id: unified.id, 
-          name: unified.display_name,
-          estimate_type: unified.estimate_type,
-          match_level: unified.match_level,
-          source_label: unified.source_label,
-          effective_date: unified.effective_date,
-          notes: unified.notes,
-          last_verified: unified.last_verified || unified.effective_date || unified.last_updated
-        } : null,
-        rates:        null,
-      });
-    }
-
+    // ── No zip_data row — use fallback state + unified pricing ──
     return NextResponse.json({
-      zip, 
-      city: finalCity ?? 'Unknown Locality', 
-      state: locationInfo?.state ?? 'US', 
-      type: 'urban',
-      is_protected: 0, 
-      contractor: null, 
-      locality: null, 
-      gpci: null, 
-      rates: null,
-    });
+      zip,
+      city:         finalCity ?? 'Unknown Locality',
+      state:        finalState,
+      type:         'urban',
+      is_protected: locationInfo ? (PROTECTED_STATES.includes(locationInfo.state) ? 1 : 0) : 0,
+      contractor:   null,
+      locality:     null,
+      gpci:         null,
+      verified_tnt: unified?.verified_tnt || null,
+      verified_market: unified?.verified_market || null,
+      entity_info:  entityInfo,
+      rates:        null,
+    }, { headers: cacheHeaders });
 
   } catch (error: any) {
     console.error('Lookup error:', error);

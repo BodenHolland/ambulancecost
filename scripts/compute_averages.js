@@ -45,7 +45,7 @@ console.log('Computing statewide averages from official entities...');
 const entities = db.prepare(`
   SELECT state, bls_base, als_base, mileage
   FROM pricing_entities
-  WHERE estimate_type = 'official'
+  WHERE estimate_type IN ('official', 'prefix_average', 'exact_zip', 'state_maximum')
     AND state IS NOT NULL
 `).all();
 
@@ -116,7 +116,7 @@ const run = db.transaction(() => {
       effective_date: today,
       last_verified: today,
       source_label: 'Computed from verified provider data in this database',
-      notes: `Calculated from ${entities.length} official provider records. Use only when no state or local data is available.`,
+      notes: null,
       estimate_type: 'national_average',
       state: null,
     });
@@ -143,7 +143,7 @@ const run = db.transaction(() => {
       effective_date: today,
       last_verified: today,
       source_label: `Computed from ${b.bls.length} verified ${state} provider records`,
-      notes: `Statewide average derived from ${b.bls.length} BLS, ${b.als.length} ALS, and ${b.mi.length} mileage data points for ${state}. Used as fallback when local provider data is unavailable.`,
+      notes: null,
       estimate_type: 'statewide_average',
       state,
     });

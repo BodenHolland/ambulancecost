@@ -14,6 +14,7 @@ export interface DatabaseProvider {
   getInaccuracyReports(): Promise<InaccuracyReport[]>;
   addInaccuracyReport(report: InaccuracyReport): Promise<void>;
   getUnifiedPricing(zip: string): Promise<any>;
+  cacheCity(zip: string, city: string): Promise<void>;
 }
 
 class D1DbProvider implements DatabaseProvider {
@@ -65,6 +66,16 @@ class D1DbProvider implements DatabaseProvider {
     await this.db.prepare(
       'INSERT OR IGNORE INTO inaccuracy_reports (city, reportedAt) VALUES (?, ?)'
     ).bind(report.city, report.reportedAt).run();
+  }
+
+  async cacheCity(zip: string, city: string): Promise<void> {
+    try {
+      await this.db.prepare(
+        'UPDATE zip_data SET city = ? WHERE zip = ? AND (city IS NULL OR city = "")'
+      ).bind(city, zip).run();
+    } catch (e) {
+      // Non-critical — silently ignore cache write failures
+    }
   }
 
   async getUnifiedPricing(zip: string) {
@@ -127,12 +138,14 @@ class D1DbProvider implements DatabaseProvider {
           state: (mapped.state as string) ?? '',
           tnt_fee: tntFee,
           description: mapped.tnt_description,
-          source_url: mapped.source_url,
+          source_url: mapped.tnt_source_url || mapped.source_url,
           source_label: mapped.source_label,
           is_verified: matchLevel === 'zip' || matchLevel === 'prefix' ? 1 : 0,
           last_updated: mapped.last_verified || mapped.effective_date || mapped.last_updated,
         } : null,
-        verified_market: (blsBase !== null || alsBase !== null || mileage !== null) ? {
+        verified_market: (blsBase !== null || alsBase !== null || mileage !== null)
+          && matchLevel !== 'statewide_average' && matchLevel !== 'national_average'
+          ? {
           zip_prefix: prefix,
           city: mapped.display_name,
           bls_base: blsBase,

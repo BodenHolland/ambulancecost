@@ -724,9 +724,9 @@ export default function AmbulanceCost() {
                     className="text-xs md:text-sm leading-relaxed mb-10 pl-5 border-l-2" 
                     style={{ color: '#9CA3AF', borderColor: result.data.verified_market ? '#10B98133' : '#F59E0B33' }}
                   >
-                    {result.data.verified_market 
+                    {result.data.verified_market
                        ? `This rate was reported for ${result.data.city} on ${result.data.verified_market.verified_date}. It reflects the current billing schedule for local ambulance providers.`
-                       : 'This is the average price private ambulance companies and municipal departments charge for this service in your region. While Medicare sets a "floor," the Market Rate reflects the actual bill you are likely to receive before insurance adjustments.'}
+                       : 'No specific rate data has been reported for this area — this is an estimate based on approximately 3× the Medicare reimbursement rate. Ambulance providers commonly bill at multiples of Medicare as a starting point for negotiations with private insurers. The actual amount you are billed may vary by provider.'}
                   </p>
 
                   <div className="space-y-4 pt-8" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
