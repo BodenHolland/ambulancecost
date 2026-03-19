@@ -20,13 +20,17 @@ let cachedDb: DatabaseProvider | null = null;
 export async function getDb(): Promise<DatabaseProvider> {
   if (cachedDb) return cachedDb;
 
-  if (process.env.NEXT_RUNTIME === 'nodejs') {
-    const { NodeDbProvider } = await import('./db-node');
-    cachedDb = new NodeDbProvider();
-    return cachedDb;
-  } else {
+  // Try Cloudflare D1 first (production edge runtime).
+  // If getRequestContext() throws, we're in local dev — fall back to Node/SQLite.
+  try {
+    const { getRequestContext } = await import('@cloudflare/next-on-pages');
+    getRequestContext(); // throws if not running on Cloudflare
     const { D1DbProvider } = await import('./db-d1');
     cachedDb = new D1DbProvider();
+    return cachedDb;
+  } catch {
+    const { NodeDbProvider } = await import('./db-node');
+    cachedDb = new NodeDbProvider();
     return cachedDb;
   }
 }
