@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getDb, InaccuracyReport } from '@/lib/db';
+import { getDb } from '@/lib/db-edge';
+import { InaccuracyReport } from '@/lib/db';
 
 export const runtime = 'edge';
 
