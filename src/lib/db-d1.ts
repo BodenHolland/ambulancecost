@@ -1,13 +1,10 @@
 import { getRequestContext } from '@cloudflare/next-on-pages';
-import type { DatabaseProvider, InaccuracyReport } from './db';
-import type { CommunityRate } from '@/app/api/community/route';
-
+import { DatabaseProvider, InaccuracyReport } from './db';
+import { CommunityRate } from '@/app/api/community/route';
 
 export class D1DbProvider implements DatabaseProvider {
   private get db() {
-    const db = (getRequestContext().env as any).DB;
-    if (!db) throw new Error('D1 binding "DB" is not configured. Add the D1 database binding in Cloudflare Pages → Settings → Functions → D1 database bindings.');
-    return db;
+    return (getRequestContext().env as any).DB;
   }
 
   async getZipData(zip: string) {
