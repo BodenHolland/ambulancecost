@@ -89,26 +89,125 @@ interface AfsRow {
     const zipRow = await db.getZipData(zip) as ZipRow | undefined;
     const unified = await db.getUnifiedPricing(zip);
 
+    let cityName: string | null = zipRow?.city ?? null;
+
+    // OpenStreetMap Fallback: If DB is empty, try to resolve from a map service
+    if (zipRow && !cityName) {
+      cityName = await resolveCityFromZip(zip);
+    }
+
+    if (zipRow) {
+      const afsRows = await db.getAfsRates(zipRow.contractor, zipRow.locality) as AfsRow[];
+
+      const byHcpcs: Record<string, AfsRow> = {};
+      for (const r of afsRows) byHcpcs[r.hcpcs] = r;
+
+      const bls     = byHcpcs['A0429'];
+      const als     = byHcpcs['A0427'];
+      const mileage = byHcpcs['A0425'];
+
+      if (!cityName) {
+        cityName = await resolveCityFromZip(zip);
+      }
+
+      return NextResponse.json({
+        zip,
+        city:         cityName ?? 'Detected Locality',
+        state:        zipRow.state,
+        type:         zipRow.type,
+        is_protected: zipRow.is_protected,
+        contractor:   zipRow.contractor,
+        locality:     zipRow.locality,
+        gpci:         bls?.gpci ?? als?.gpci ?? 1.0,
+        verified_tnt: unified?.verified_tnt || null,
+        verified_market: unified?.verified_market || null,
+        entity_info: unified ? { 
+          id: unified.id, 
+          name: unified.display_name,
+          estimate_type: unified.estimate_type,
+          match_level: unified.match_level,
+          source_label: unified.source_label,
+          effective_date: unified.effective_date,
+          notes: unified.notes,
+          last_verified: unified.last_verified || unified.effective_date || unified.last_updated
+        } : null,
+        rates: {
+          bls_urban:       bls?.urban_rate       ?? null,
+          bls_rural:       bls?.rural_rate       ?? null,
+          bls_super_rural: bls?.super_rural_rate ?? null,
+          als_urban:       als?.urban_rate       ?? null,
+          als_rural:       als?.rural_rate       ?? null,
+          als_super_rural: als?.super_rural_rate ?? null,
+          mileage_urban:   mileage?.urban_rate   ?? null,
+          mileage_rural:   mileage?.rural_rate   ?? null,
+        }
+      }, {
+        headers: {
+          'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0',
+        }
+      });
+    }
+
+    // ── Fallback ──
+    const prefix = zip.substring(0, 2);
+    const locationInfo = (ZIP_STATE_PREFIXES as any)[prefix];
+    
+    // Always try to resolve city if missing
+    let finalCity = cityName;
+    if (!finalCity) {
+      finalCity = await resolveCityFromZip(zip);
+    }
+
+    if (locationInfo || unified || finalCity) {
+      return NextResponse.json({
+        zip,
+        city:         unified?.display_name ?? finalCity ?? 'Detected Locality',
+        state:        locationInfo?.state ?? '',
+        type:         'urban',
+        is_protected: locationInfo ? (PROTECTED_STATES.includes(locationInfo.state) ? 1 : 0) : 0,
+        contractor:   null,
+        locality:     null,
+        gpci:         null,
+        verified_tnt: unified?.verified_tnt || null,
+        verified_market: unified?.verified_market || null,
+        entity_info: unified ? { 
+          id: unified.id, 
+          name: unified.display_name,
+          estimate_type: unified.estimate_type,
+          match_level: unified.match_level,
+          source_label: unified.source_label,
+          effective_date: unified.effective_date,
+          notes: unified.notes,
+          last_verified: unified.last_verified || unified.effective_date || unified.last_updated
+        } : null,
+        rates:        null,
+      });
+    }
+
     return NextResponse.json({
-      zip,
-      city: zipRow?.city || 'City',
-      state: zipRow?.state || '',
-      type: zipRow?.type || 'urban',
-      is_protected: zipRow?.is_protected || 0,
-      contractor: zipRow?.contractor || null,
-      locality: zipRow?.locality || null,
-      unified_exists: !!unified,
-      debug: 'v4-simplified'
+      zip, 
+      city: finalCity ?? 'Unknown Locality', 
+      state: locationInfo?.state ?? 'US', 
+      type: 'urban',
+      is_protected: 0, 
+      contractor: null, 
+      locality: null, 
+      gpci: null, 
+      rates: null,
     });
 
   } catch (error: any) {
+    console.error('Lookup error:', error);
     return NextResponse.json({ 
-      error: 'Simplified Error', 
+      error: 'Internal server error', 
       message: error.message,
       stack: error.stack?.split('\n').slice(0, 3)
     }, { status: 500 });
   }
 }
+
 async function resolveCityFromZip(zip: string): Promise<string | null> {
   try {
     const url = `https://nominatim.openstreetmap.org/search?postalcode=${zip}&country=USA&format=json&addressdetails=1&limit=1`;
@@ -124,3 +223,4 @@ async function resolveCityFromZip(zip: string): Promise<string | null> {
   }
   return null;
 }
+
