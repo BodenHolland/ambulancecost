@@ -20,17 +20,18 @@ let cachedDb: DatabaseProvider | null = null;
 export async function getDb(): Promise<DatabaseProvider> {
   if (cachedDb) return cachedDb;
 
-  // Try Cloudflare D1 first (production edge runtime).
-  // If getRequestContext() throws, we're in local dev — fall back to Node/SQLite.
-  try {
-    const { getRequestContext } = await import('@cloudflare/next-on-pages');
-    getRequestContext(); // throws if not running on Cloudflare
+  // `EdgeRuntime` global is defined in Cloudflare Workers and Vercel Edge.
+  // It is NOT defined in regular Node.js (local npm run dev).
+  const isEdge = typeof (globalThis as any).EdgeRuntime === 'string';
+
+  if (isEdge) {
     const { D1DbProvider } = await import('./db-d1');
     cachedDb = new D1DbProvider();
-    return cachedDb;
-  } catch {
+  } else {
     const { NodeDbProvider } = await import('./db-node');
     cachedDb = new NodeDbProvider();
-    return cachedDb;
   }
+
+  return cachedDb!;
 }
+
