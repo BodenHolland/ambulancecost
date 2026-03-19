@@ -859,9 +859,7 @@ export default function AmbulanceCost() {
               {/* Insurance Coverage Link */}
               <button onClick={() => setActiveResource('does-insurance-cover-ambulance')} className="group block h-full text-left">
                 <div className="bg-gradient-to-br from-indigo-50 to-blue-50 p-6 md:p-8 rounded-[2.5rem] shadow-xl border border-indigo-100 relative overflow-hidden flex flex-col justify-center h-full transition-all hover:shadow-2xl hover:-translate-y-1 hover:border-indigo-300">
-                  <div className="absolute -right-10 -bottom-10 opacity-5 group-hover:opacity-10 transition-opacity">
-                    <FileText className="w-48 h-48" />
-                  </div>
+
                   
                   <div className="flex flex-col xl:flex-row gap-6 items-center text-center xl:text-left relative z-10">
                     <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-white text-indigo-600 shadow-sm flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
