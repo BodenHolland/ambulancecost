@@ -88,6 +88,10 @@ export default function TermsOfServicePage() {
             If you have any questions or concerns regarding these Terms or our Services, please use the secure "Contact Us" button located in the footer portion of this page.
           </p>
         </article>
+
+        <div className="mt-16 pt-8 border-t border-slate-200 text-center">
+          <span className="text-xs font-mono text-slate-400 tracking-wider">Build v1.4.0</span>
+        </div>
       </main>
     </div>
   );
