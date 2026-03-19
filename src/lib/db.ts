@@ -18,19 +18,21 @@ export interface DatabaseProvider {
 
 class D1DbProvider implements DatabaseProvider {
   private get db() {
-    // getRequestContext() gets the Cloudflare context. 
-    // If next dev is run locally without Cloudflare bindings, env might be empty here.
-    const ctx = getRequestContext();
-    const db = ctx?.env && (ctx.env as any).DB;
-    if (!db) {
+    try {
+      const ctx = getRequestContext();
+      const db = (ctx.env as any).DB;
+      if (!db) throw new Error('DB binding not found on context env');
+      return db;
+    } catch (e) {
       throw new Error(
         'D1 Database binding "DB" is not available.\n' +
         'In production, ensure it is added in the Cloudflare Dashboard.\n' +
         'In local development, ensure you are running via Wrangler or Cloudflare Next.js dev plugin.'
       );
     }
-    return db;
   }
+
+
 
   async getZipData(zip: string) {
     return await this.db.prepare('SELECT * FROM zip_data WHERE zip = ?').bind(zip).first();
@@ -152,6 +154,10 @@ class D1DbProvider implements DatabaseProvider {
 let cachedDb: DatabaseProvider | null = null;
 
 export async function getDb(): Promise<DatabaseProvider> {
-  if (!cachedDb) cachedDb = new D1DbProvider();
+  if (!cachedDb) {
+    cachedDb = new D1DbProvider();
+  }
   return cachedDb;
 }
+
+
