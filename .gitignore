@@ -51,3 +51,4 @@ next-env.d.ts
 A0429
 Carrier
 wrangler.toml
+.wrangler/
