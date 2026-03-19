@@ -93,6 +93,11 @@ export async function GET(request: NextRequest) {
 
     let cityName: string | null = zipRow?.city ?? null;
 
+    // OpenStreetMap Fallback: If DB is empty, try to resolve from a map service
+    if (zipRow && !cityName) {
+      cityName = await resolveCityFromZip(zip);
+    }
+
     if (zipRow) {
       const afsRows = await db.getAfsRates(zipRow.contractor, zipRow.locality) as AfsRow[];
 
