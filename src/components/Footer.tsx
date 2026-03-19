@@ -115,7 +115,7 @@ const Footer = () => {
           
           {/* Right Side: Copyright */}
           <div className="text-xs font-bold uppercase tracking-widest text-slate-500 text-center md:text-right">
-            © 2026 AmbulanceCost Project • v1.2.0
+            © 2026 AmbulanceCost Project • v1.3.0
           </div>
         </div>
       </div>
