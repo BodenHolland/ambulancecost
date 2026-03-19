@@ -7,7 +7,3 @@ pages_build_output_dir = ".vercel/output/static"
 binding = "DB"
 database_name = "ambulance-db"
 database_id = "1b63ae4c-728f-4b84-b677-e0edf20f9dd0"
-
-# Scheduled data validation — runs weekly on Sunday at 6 AM UTC
-[triggers]
-crons = ["0 6 * * 0"]
