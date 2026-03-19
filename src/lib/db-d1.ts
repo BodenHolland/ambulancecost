@@ -1,6 +1,7 @@
 import { getRequestContext } from '@cloudflare/next-on-pages';
-import { DatabaseProvider, InaccuracyReport } from './db';
-import { CommunityRate } from '@/app/api/community/route';
+import type { DatabaseProvider, InaccuracyReport } from './db';
+import type { CommunityRate } from '@/app/api/community/route';
+
 
 export class D1DbProvider implements DatabaseProvider {
   private get db() {
