@@ -197,7 +197,11 @@ export async function GET(request: NextRequest) {
 
   } catch (error: any) {
     console.error('Lookup error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return NextResponse.json({ 
+      error: 'Internal server error', 
+      detail: error?.message ?? String(error),
+      stack: error?.stack?.split('\n').slice(0, 5)
+    }, { status: 500 });
   }
 }
 async function resolveCityFromZip(zip: string): Promise<string | null> {
