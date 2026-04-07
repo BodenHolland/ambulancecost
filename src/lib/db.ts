@@ -164,12 +164,49 @@ class D1DbProvider implements DatabaseProvider {
   }
 }
 
+class LocalDbProvider implements DatabaseProvider {
+  // Simple in-memory fallback for local development
+  async getZipData(zip: string) { return null; }
+  async getAfsRates(contractor: string, locality: string) { return []; }
+  async getCommunityRates() { return []; }
+  async addCommunityRate() {}
+  async getInaccuracyReports() { return []; }
+  async addInaccuracyReport() {}
+  async cacheCity() {}
+  async getUnifiedPricing(zip: string) {
+    // Return a basic "estimated" response for local dev
+    return {
+      id: 'local-dev',
+      display_name: 'Local Dev (No DB)',
+      estimate_type: 'local_fallback',
+      match_level: 'national_average',
+      tnt_fee: 450,
+      tnt_description: 'Standard estimated fee (Local DB Disconnected)',
+      source_label: 'Local Dev Mock',
+      last_verified: '2026-04-07'
+    };
+  }
+}
+
 let cachedDb: DatabaseProvider | null = null;
 
 export async function getDb(): Promise<DatabaseProvider> {
-  if (!cachedDb) {
-    cachedDb = new D1DbProvider();
+  if (cachedDb) return cachedDb;
+
+  try {
+    // Try to initialize D1
+    const ctx = getRequestContext();
+    if (ctx && (ctx.env as any).DB) {
+      cachedDb = new D1DbProvider();
+    } else {
+      console.warn('DB binding not found. Falling back to LocalDbProvider.');
+      cachedDb = new LocalDbProvider();
+    }
+  } catch (e) {
+    console.warn('Error accessing Cloudflare context. Falling back to LocalDbProvider.');
+    cachedDb = new LocalDbProvider();
   }
+  
   return cachedDb;
 }
 

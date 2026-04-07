@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Search, MapPin, Ambulance, Info, AlertTriangle, ShieldCheck, TrendingUp, DollarSign, Navigation, ChevronRight, ChevronLeft, X, ExternalLink, ShieldAlert, Loader2, FileText } from 'lucide-react';
 import Link from 'next/link';
 import { calculateEstimate, CalculationResult, LocalityType } from '@/lib/calculator';
@@ -94,6 +94,11 @@ export default function AmbulanceCost() {
     data: ZipData;
   } | null>(null);
 
+  const [citiesData, setCitiesData] = useState<[string, string, string][]>([]);
+  const [suggestions, setSuggestions] = useState<[string, string, string][]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const searchContainerRef = useRef<HTMLDivElement>(null);
+
   const [showKeywordWarning, setShowKeywordWarning] = useState(false);
   const [communityRates, setCommunityRates] = useState<CommunityRate[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -111,30 +116,83 @@ export default function AmbulanceCost() {
       .then(res => res.json())
       .then(data => setFlaggedCities(data))
       .catch(err => console.error('Failed to load flagged cities', err));
+
+    fetch('/cities.json')
+      .then(res => res.json())
+      .then(data => setCitiesData(data))
+      .catch(err => console.error('Failed to load cities data', err));
+  }, []);
+
+  // Handle clicks outside the dropdown
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (searchContainerRef.current && !searchContainerRef.current.contains(event.target as Node)) {
+        setShowSuggestions(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   const emergencyKeywords = ['help', 'dying', 'emergency', 'heart attack', 'stroke', 'bleeding', 'accident', 'suicide', '911', 'cpr'];
 
   const handleZipChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
-    const cleanVal = val.replace(/\D/g, '').substring(0, 5);
-    setZip(cleanVal);
+    setZip(val);
 
-    // Detect keywords even if zip input is mainly numbers, 
-    // but users might try to type help in it
     if (emergencyKeywords.some(kw => val.toLowerCase().includes(kw))) {
       setShowKeywordWarning(true);
     } else {
       setShowKeywordWarning(false);
     }
+
+    if (val.trim() === '') {
+      setShowSuggestions(false);
+      setSuggestions([]);
+      return;
+    }
+
+    const q = val.toLowerCase().trim();
+    const isNum = /^\d/.test(q);
+    const filtered = citiesData.filter(cityTuple => {
+      if (isNum) return cityTuple[2].startsWith(q);
+      const nameFirst = cityTuple[0].toLowerCase();
+      const nameFull = `${cityTuple[0]}, ${cityTuple[1]}`.toLowerCase();
+      // Prefix matching is preferred for cities
+      return nameFirst.startsWith(q) || nameFull.includes(q);
+    }).slice(0, 8);
+
+    setSuggestions(filtered);
+    setShowSuggestions(filtered.length > 0);
+  };
+
+  const handleSelectSuggestion = (cityTuple: [string, string, string]) => {
+    const selectedZip = cityTuple[2];
+    setZip(`${cityTuple[0]}, ${cityTuple[1]} (${selectedZip})`);
+    setShowSuggestions(false);
+    handleSearch(undefined, selectedZip);
   };
 
   const handleSearch = async (e?: React.FormEvent, zipOverride?: string) => {
     if (e) e.preventDefault();
-    const zipToSearch = zipOverride || zip;
+    setShowSuggestions(false);
+    
+    let zipToSearch = zipOverride || zip;
+    const match = zipToSearch.match(/\((\d{5})\)$/);
+    if (match) {
+      zipToSearch = match[1];
+    } else {
+      zipToSearch = zipToSearch.replace(/\D/g, '').substring(0, 5);
+    }
+
     if (!zipToSearch || zipToSearch.length < 5) {
-      if (!showKeywordWarning) setError('Please enter a valid 5-digit zip code.');
-      return;
+      if (suggestions.length > 0) {
+        zipToSearch = suggestions[0][2];
+        setZip(`${suggestions[0][0]}, ${suggestions[0][1]} (${zipToSearch})`);
+      } else {
+        if (!showKeywordWarning) setError('Please enter a valid 5-digit zip code or city name.');
+        return;
+      }
     }
 
     setLoading(true);
@@ -222,7 +280,7 @@ export default function AmbulanceCost() {
             <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-400 rounded-full blur-[120px]"></div>
           </div>
           
-          <div className="max-w-4xl mx-auto text-center relative z-10">
+          <div className="max-w-4xl mx-auto text-center relative z-30">
             <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6">
               Ambulance<span className="text-blue-400">Cost</span>
             </h1>
@@ -231,26 +289,50 @@ export default function AmbulanceCost() {
             </p>
 
             {/* Search Bar */}
-            <div className="max-w-2xl mx-auto flex flex-col sm:flex-row gap-4">
-              <div className="flex-1 relative flex items-center bg-white rounded-2xl shadow-2xl overflow-hidden">
+            <div className="max-w-2xl mx-auto flex flex-col sm:flex-row gap-4" ref={searchContainerRef}>
+              <div className="flex-1 relative flex items-center bg-white rounded-2xl shadow-2xl">
                 <div className="pl-6 pr-3 py-5 flex items-center justify-center">
                   <Search className="w-6 h-6 text-slate-400" />
                 </div>
                 <input 
                   type="text" 
-                  placeholder="Zip Code (e.g. 94107)"
+                  name="ambulanceZipSearch"
+                  id="ambulanceZipSearch"
+                  placeholder="City, State or Zip Code"
                   className="flex-1 py-5 bg-transparent outline-none text-slate-800 font-black placeholder:text-slate-400 placeholder:font-bold text-base sm:text-lg md:text-xl"
                   value={zip}
                   onChange={handleZipChange}
+                  onFocus={() => { if (suggestions.length > 0) setShowSuggestions(true); }}
                   onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                  autoComplete="off"
                 />
                 <button 
                   onClick={useLocation}
-                  className="p-5 text-blue-600 hover:bg-slate-50 transition-colors border-l border-slate-100"
+                  className="p-5 text-blue-600 hover:bg-slate-50 transition-colors border-l border-slate-100 rounded-r-2xl"
                   title="Use my location"
                 >
                   <Navigation className="w-6 h-6" />
                 </button>
+                
+                {/* Autocomplete Dropdown */}
+                {showSuggestions && (
+                  <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-2xl border border-slate-100 overflow-hidden z-50 text-left">
+                    <ul className="py-2">
+                      {suggestions.map((s, idx) => (
+                        <li key={idx}>
+                          <button
+                            onClick={() => handleSelectSuggestion(s)}
+                            className="w-full text-left px-6 py-3 hover:bg-blue-50 focus:bg-blue-50 transition-colors border-b border-slate-50 last:border-0"
+                          >
+                            <span className="text-slate-800 font-bold">{s[0]}</span>
+                            <span className="text-slate-500 font-medium">, {s[1]}</span>
+                            {/^\d/.test(zip) && <span className="text-slate-400 font-mono text-xs ml-2">({s[2]})</span>}
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
               <button 
                 onClick={() => handleSearch()}
