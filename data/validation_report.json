@@ -1,147 +1,25 @@
 {
-  "generated_at": "2026-03-18T17:49:37.590Z",
+  "generated_at": "2026-04-17T00:24:59.043Z",
   "stats": {
-    "total_entities": 42,
-    "official": 38,
-    "state_avg": 3,
+    "total_entities": 43,
+    "official": 37,
+    "state_avg": 5,
     "nat_avg": 1,
     "zip_count": 11,
-    "prefix_count": 82
+    "prefix_count": 172
   },
-  "prefix_coverage_pct": 8.2,
+  "prefix_coverage_pct": 17.2,
   "issues": [
     {
       "severity": "warning",
-      "message": "11 official entity/ies have zero (not NULL) rates — consider setting to NULL if unknown:"
-    },
-    {
-      "severity": "warning",
-      "message": "   city_of_mansfield_market: BLS=0 ALS=null Mileage=20"
-    },
-    {
-      "severity": "warning",
-      "message": "   city_of_baytown_market: BLS=0 ALS=null Mileage=22"
-    },
-    {
-      "severity": "warning",
-      "message": "   hardin_county_esd__2__lumberton_fire__ems_market: BLS=0 ALS=null Mileage=24"
-    },
-    {
-      "severity": "warning",
-      "message": "   austin_and_travis_county_market: BLS=0 ALS=null Mileage=13.5"
-    },
-    {
-      "severity": "warning",
-      "message": "   walla_walla_county_fire_protection_district_5_market: BLS=850 ALS=null Mileage=0"
-    },
-    {
-      "severity": "warning",
-      "message": "   whitman_county_fire_district_12_market: BLS=850 ALS=null Mileage=0"
-    },
-    {
-      "severity": "warning",
-      "message": "   city_of_buckley_market: BLS=0 ALS=null Mileage=41.94"
-    },
-    {
-      "severity": "warning",
-      "message": "   new_york_tnt: BLS=0 ALS=null Mileage=0"
-    },
-    {
-      "severity": "warning",
-      "message": "   houston_tnt: BLS=0 ALS=null Mileage=0"
-    },
-    {
-      "severity": "warning",
-      "message": "   los_angeles_tnt: BLS=0 ALS=null Mileage=0"
-    },
-    {
-      "severity": "warning",
-      "message": "   chicago_tnt: BLS=0 ALS=null Mileage=0"
+      "message": "6 average entity/ies missing notes: us_national_average, ca_statewide_average, tx_statewide_average, wa_statewide_average, ny_statewide_average, il_statewide_average"
     },
     {
       "severity": "warning",
       "message": "Low prefix coverage — consider running compute_averages.js"
     }
   ],
-  "zero_base_entities": [
-    {
-      "id": "city_of_mansfield_market",
-      "display_name": "City of Mansfield",
-      "bls_base": 0,
-      "als_base": null,
-      "mileage": 20
-    },
-    {
-      "id": "city_of_baytown_market",
-      "display_name": "City of Baytown",
-      "bls_base": 0,
-      "als_base": null,
-      "mileage": 22
-    },
-    {
-      "id": "hardin_county_esd__2__lumberton_fire__ems_market",
-      "display_name": "Hardin County ESD # 2 / Lumberton Fire & EMS",
-      "bls_base": 0,
-      "als_base": null,
-      "mileage": 24
-    },
-    {
-      "id": "austin_and_travis_county_market",
-      "display_name": "Austin and Travis County",
-      "bls_base": 0,
-      "als_base": null,
-      "mileage": 13.5
-    },
-    {
-      "id": "walla_walla_county_fire_protection_district_5_market",
-      "display_name": "Walla Walla County Fire Protection District #5",
-      "bls_base": 850,
-      "als_base": null,
-      "mileage": 0
-    },
-    {
-      "id": "whitman_county_fire_district_12_market",
-      "display_name": "Whitman County Fire District 12",
-      "bls_base": 850,
-      "als_base": null,
-      "mileage": 0
-    },
-    {
-      "id": "city_of_buckley_market",
-      "display_name": "City of Buckley",
-      "bls_base": 0,
-      "als_base": null,
-      "mileage": 41.94
-    },
-    {
-      "id": "new_york_tnt",
-      "display_name": "New York Official",
-      "bls_base": 0,
-      "als_base": null,
-      "mileage": 0
-    },
-    {
-      "id": "houston_tnt",
-      "display_name": "Houston Official",
-      "bls_base": 0,
-      "als_base": null,
-      "mileage": 0
-    },
-    {
-      "id": "los_angeles_tnt",
-      "display_name": "Los Angeles Official",
-      "bls_base": 0,
-      "als_base": null,
-      "mileage": 0
-    },
-    {
-      "id": "chicago_tnt",
-      "display_name": "Chicago Official",
-      "bls_base": 0,
-      "als_base": null,
-      "mileage": 0
-    }
-  ],
+  "zero_base_entities": [],
   "orphaned_zips": [],
   "orphaned_prefixes": [],
   "zip_conflicts": [],

@@ -1,0 +1,68 @@
+[
+  {
+    "id": "san_francisco_ca",
+    "municipality": "San Francisco",
+    "state": "CA",
+    "bls_base": 2555,
+    "als_base": 2555,
+    "mileage": 49.0,
+    "tnt_fee": 568,
+    "source_url": "https://sf-fire.org/services/ambulance-billing",
+    "notes": "Verified 2025 rates via SF Fire Dept."
+  },
+  {
+    "id": "new_york_tnt",
+    "municipality": "New York City",
+    "state": "NY",
+    "bls_base": 1385,
+    "als_base": 1680,
+    "mileage": 20.0,
+    "tnt_fee": 630,
+    "source_url": "https://www.nyc.gov/site/fdny/about/resources/fire-ems-safety/ems-billing.page",
+    "notes": "NYC FDNY rates. TNT is $630 for BLS, $1,050 for ALS."
+  },
+  {
+    "id": "houston_tnt",
+    "municipality": "Houston",
+    "state": "TX",
+    "bls_base": 1104.65,
+    "als_base": 1104.65,
+    "mileage": 14.36,
+    "tnt_fee": 175,
+    "source_url": "https://www.houstontx.gov/fire/ems-billing/",
+    "notes": "Houston Fire Dept rates."
+  },
+  {
+    "id": "los_angeles_tnt",
+    "municipality": "Los Angeles",
+    "state": "CA",
+    "bls_base": 1862,
+    "als_base": 2915,
+    "mileage": 29.0,
+    "tnt_fee": 541,
+    "source_url": "https://cityclerk.lacity.org/onlinedocs/2025/25-0410_ord_188894_4-30-26.pdf",
+    "notes": "Updated LA Ordinance No. 188894 (March 30, 2026). TNT increased from $291 to $541."
+  },
+  {
+    "id": "chicago_tnt",
+    "municipality": "Chicago",
+    "state": "IL",
+    "bls_base": 3234,
+    "als_base": 3384,
+    "mileage": 19.0,
+    "tnt_fee": null,
+    "source_url": "https://www.chicago.gov/content/dam/city/depts/dol/rulesandregs/Ambulance_Rules_2026.pdf",
+    "notes": "Chicago Rules 2026. No official TNT fee found in rules."
+  },
+  {
+    "id": "san_mateo_county",
+    "municipality": "San Mateo County",
+    "state": "CA",
+    "bls_base": 4123.15,
+    "als_base": 4123.15,
+    "mileage": 105.43,
+    "tnt_fee": 0,
+    "source_url": "https://www.smchealth.org/pod/9-1-1-ambulance-transport-service-charges",
+    "notes": "San Mateo County 9-1-1 charges. TNT explicitly $0."
+  }
+]

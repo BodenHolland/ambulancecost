@@ -1,0 +1,62 @@
+[
+  {
+    "municipality": "San Francisco",
+    "bls_base": 2555,
+    "als_base": 2555,
+    "mileage": 49,
+    "bls_treatment_no_transport_cost": 568,
+    "als_treatment_no_transport_cost": 568,
+    "notes": "The fees for BLS and ALS treatment without transport are the same, listed under 'Treatment without Transportation'. The base transport fees for BLS and ALS are also the same.",
+    "source_url": "http://sf-fire.org/services/ambulance-billing"
+  },
+  {
+    "municipality": "Fire Department",
+    "bls_base": 1385,
+    "als_base": 1680,
+    "mileage": 20,
+    "bls_treatment_no_transport_cost": 630,
+    "als_treatment_no_transport_cost": 1050,
+    "notes": "The BLS and ALS treatment without transport costs are listed as 'Facilitation of Treatment in Place'. The base rates for BLS and ALS are provided, along with the mileage rate.",
+    "source_url": "https://www.nyc.gov/assets/fdny/downloads/pdf/about/fee-schedule-ambulance.pdf"
+  },
+  {
+    "municipality": "Houston Fire Department",
+    "bls_base": 1104.65,
+    "als_base": null,
+    "mileage": 14.36,
+    "bls_treatment_no_transport_cost": 175,
+    "als_treatment_no_transport_cost": 175,
+    "notes": "The document does not specify separate BLS and ALS treatment without transport costs, so both are assumed to be the same. ALS base transport rate is not specified.",
+    "source_url": "https://www.houstontx.gov/council/committees/pshs/20180712/hfd-billing-ordinance.pdf"
+  },
+  {
+    "municipality": "Los Angeles",
+    "bls_base": 1030,
+    "als_base": 1452,
+    "mileage": 19,
+    "bls_treatment_no_transport_cost": null,
+    "als_treatment_no_transport_cost": null,
+    "notes": "The document does not mention treatment without transport costs.",
+    "source_url": "https://lafd.org/sites/default/files/pdf_files/Admin%20Code%20-%20Ambulance%20Reimubursement.pdf"
+  },
+  {
+    "municipality": "City of Chicago",
+    "bls_base": 3234,
+    "als_base": 3384,
+    "mileage": 19,
+    "bls_treatment_no_transport_cost": null,
+    "als_treatment_no_transport_cost": null,
+    "notes": "The document does not mention any specific costs for treatment without transport. Therefore, those values are set to null.",
+    "source_url": "https://www.chicago.gov/city/en/depts/fin/supp_info/revenue/ambulance_bills.html"
+  },
+  {
+    "municipality": "San Mateo County",
+    "bls_base": null,
+    "als_base": null,
+    "mileage": null,
+    "bls_treatment_no_transport_cost": null,
+    "als_treatment_no_transport_cost": null,
+    "notes": "The provided text does not contain any information regarding EMS billing rates or costs for BLS/ALS services, transport, or treatment without transport.",
+    "source_url": "https://www.smchealth.org/ems"
+  }
+]

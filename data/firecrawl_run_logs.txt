@@ -1,0 +1,257 @@
+[dotenv@17.3.1] injecting env (2) from .env.local -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+Starting Precision EMS Extraction...
+
+--- Processing: https://www.nyc.gov/assets/fdny/downloads/pdf/about/fee-schedule-ambulance.pdf ---
+1. Scraping URL with Firecrawl...
+✓ Scraped successfully. Markdown length: 824 characters.
+2. Requesting extraction from OpenAI...
+✓ Extraction Complete. Result:
+{
+  "municipality": "Fire Department",
+  "bls_treatment_no_transport_cost": 630,
+  "als_treatment_no_transport_cost": 1050,
+  "notes": "The costs for 'Facilitation of Treatment in Place' are considered as treatment without transport costs for BLS and ALS.",
+  "source_url": "https://www.nyc.gov/assets/fdny/downloads/pdf/about/fee-schedule-ambulance.pdf"
+}
+
+--- Processing: https://lafd.org/sites/default/files/pdf_files/Admin%20Code%20-%20Ambulance%20Reimubursement.pdf ---
+1. Scraping URL with Firecrawl...
+✓ Scraped successfully. Markdown length: 8255 characters.
+2. Requesting extraction from OpenAI...
+✓ Extraction Complete. Result:
+{
+  "municipality": "Los Angeles",
+  "bls_treatment_no_transport_cost": null,
+  "als_treatment_no_transport_cost": null,
+  "notes": "The document does not mention any costs for treatment without transport, such as 'Assessment Non-Transport', 'Treat and Release', or similar terms. Therefore, the values are set to null.",
+  "source_url": "https://lafd.org/sites/default/files/pdf_files/Admin%20Code%20-%20Ambulance%20Reimubursement.pdf"
+}
+
+--- Processing: https://www.chicago.gov/city/en/depts/fin/supp_info/revenue/ambulance_bills.html ---
+1. Scraping URL with Firecrawl...
+✓ Scraped successfully. Markdown length: 15911 characters.
+2. Requesting extraction from OpenAI...
+✓ Extraction Complete. Result:
+{
+  "municipality": "City of Chicago",
+  "bls_treatment_no_transport_cost": null,
+  "als_treatment_no_transport_cost": null,
+  "notes": "The document does not provide specific costs for BLS or ALS treatment without transport. It only lists the fees for transport services.",
+  "source_url": "https://www.chicago.gov/city/en/depts/fin/supp_info/revenue/ambulance_bills.html"
+}
+
+--- Processing: https://www.houstontx.gov/council/committees/pshs/20180712/hfd-billing-ordinance.pdf ---
+1. Scraping URL with Firecrawl...
+✓ Scraped successfully. Markdown length: 3069 characters.
+2. Requesting extraction from OpenAI...
+✓ Extraction Complete. Result:
+{
+  "municipality": "Houston Fire Department",
+  "bls_treatment_no_transport_cost": 175,
+  "als_treatment_no_transport_cost": 175,
+  "notes": "The document specifies a 'Treatment-no-Transport' fee of $175.00, applicable to both BLS and ALS as no distinction is made.",
+  "source_url": "https://www.houstontx.gov/council/committees/pshs/20180712/hfd-billing-ordinance.pdf"
+}
+
+--- Processing: https://www.phoenix.gov/content/dam/phoenix/auditorsite/documents/audit-reports/Ambulance%20Billing%20Collections.pdf ---
+1. Scraping URL with Firecrawl...
+✓ Scraped successfully. Markdown length: 12009 characters.
+2. Requesting extraction from OpenAI...
+✓ Extraction Complete. Result:
+{
+  "municipality": "City of Phoenix",
+  "bls_treatment_no_transport_cost": null,
+  "als_treatment_no_transport_cost": null,
+  "notes": "The document does not provide specific costs for BLS or ALS treatment without transport. It only lists transport-related charges.",
+  "source_url": "https://www.phoenix.gov/content/dam/phoenix/auditorsite/documents/audit-reports/Ambulance%20Billing%20Collections.pdf"
+}
+
+--- Processing: https://controller.phila.gov/wp-content/uploads/2018/06/FireDept-AnalysisofAmbulanceFees.pdf ---
+1. Scraping URL with Firecrawl...
+✓ Scraped successfully. Markdown length: 28161 characters.
+2. Requesting extraction from OpenAI...
+✓ Extraction Complete. Result:
+{
+  "municipality": "Philadelphia",
+  "bls_treatment_no_transport_cost": null,
+  "als_treatment_no_transport_cost": null,
+  "notes": "The document does not provide specific costs for BLS or ALS treatment without transport. It focuses on transport fees and collection issues.",
+  "source_url": "https://controller.phila.gov/wp-content/uploads/2018/06/FireDept-AnalysisofAmbulanceFees.pdf"
+}
+
+--- Processing: https://www.sa.gov/files/assets/main/v/1/safd/documents/charity-care-policy.pdf ---
+1. Scraping URL with Firecrawl...
+✓ Scraped successfully. Markdown length: 2922 characters.
+2. Requesting extraction from OpenAI...
+✓ Extraction Complete. Result:
+{
+  "municipality": "City of San Antonio Fire Department",
+  "bls_treatment_no_transport_cost": null,
+  "als_treatment_no_transport_cost": null,
+  "notes": "The document does not provide specific costs for BLS or ALS treatment without transport.",
+  "source_url": "https://www.sa.gov/files/assets/main/v/1/safd/documents/charity-care-policy.pdf"
+}
+
+--- Processing: https://www.sandiego.gov/fire/about/emergency-medical-services/transport-fees ---
+1. Scraping URL with Firecrawl...
+✓ Scraped successfully. Markdown length: 2529 characters.
+2. Requesting extraction from OpenAI...
+✓ Extraction Complete. Result:
+{
+  "municipality": "San Diego Fire-Rescue Department",
+  "bls_treatment_no_transport_cost": 223.52,
+  "als_treatment_no_transport_cost": 223.52,
+  "notes": "The cost for ALS or BLS treatment without transport is combined into a single fee of $223.52.",
+  "source_url": "https://www.sandiego.gov/fire/about/emergency-medical-services/transport-fees"
+}
+
+--- Processing: https://dallascityhall.com/departments/aviation/DCH%20Document/CHAPTER%2015D.%20AMBULANCES.pdf ---
+1. Scraping URL with Firecrawl...
+✓ Scraped successfully. Markdown length: 76419 characters.
+2. Requesting extraction from OpenAI...
+✓ Extraction Complete. Result:
+{
+  "municipality": "Dallas",
+  "bls_treatment_no_transport_cost": 125,
+  "als_treatment_no_transport_cost": 125,
+  "notes": "The document specifies a $125 fee for treatment without transport, but does not differentiate between BLS and ALS. Therefore, both are assumed to be the same.",
+  "source_url": "https://dallascityhall.com/departments/aviation/DCH%20Document/CHAPTER%2015D.%20AMBULANCES.pdf"
+}
+
+--- Processing: https://www.sanjoseca.gov/your-government/departments-offices/fire-department/about-sjfd/first-responder-fees ---
+1. Scraping URL with Firecrawl...
+✓ Scraped successfully. Markdown length: 8988 characters.
+2. Requesting extraction from OpenAI...
+✓ Extraction Complete. Result:
+{
+  "municipality": "San José",
+  "bls_treatment_no_transport_cost": 427,
+  "als_treatment_no_transport_cost": 427,
+  "notes": "The First Responder Fee applies to all paramedic-level medical services provided, which includes both BLS and ALS, at a flat rate of $427 per patient treated.",
+  "source_url": "https://www.sanjoseca.gov/your-government/departments-offices/fire-department/about-sjfd/first-responder-fees"
+}
+
+--- Processing: https://www.austintexas.gov/sites/default/files/files/EMS/FY26-EMS-Fee-Schedule.pdf ---
+1. Scraping URL with Firecrawl...
+✓ Scraped successfully. Markdown length: 593 characters.
+2. Requesting extraction from OpenAI...
+✓ Extraction Complete. Result:
+{
+  "municipality": "City of Austin",
+  "bls_treatment_no_transport_cost": null,
+  "als_treatment_no_transport_cost": null,
+  "notes": "The page containing the EMS billing information is not found, so no data could be extracted.",
+  "source_url": "https://www.austintexas.gov/sites/default/files/files/EMS/FY26-EMS-Fee-Schedule.pdf"
+}
+
+--- Processing: https://www.jacksonville.gov/departments/Fire-and-Rescue.aspx ---
+1. Scraping URL with Firecrawl...
+✓ Scraped successfully. Markdown length: 24653 characters.
+2. Requesting extraction from OpenAI...
+✓ Extraction Complete. Result:
+{
+  "municipality": "Jacksonville Fire and Rescue Department",
+  "bls_treatment_no_transport_cost": null,
+  "als_treatment_no_transport_cost": null,
+  "notes": "The provided text does not contain any information about the costs for BLS or ALS treatment without transport.",
+  "source_url": "https://www.jacksonville.gov/departments/Fire-and-Rescue.aspx"
+}
+
+--- Processing: https://www.medstar911.org/wp-content/uploads/2022/03/MedStar-Fee-Schedule-as-of-3-1-22.pdf ---
+1. Scraping URL with Firecrawl...
+✓ Scraped successfully. Markdown length: 1052 characters.
+2. Requesting extraction from OpenAI...
+✓ Extraction Complete. Result:
+{
+  "municipality": "Metropolitan Area EMS Authority",
+  "bls_treatment_no_transport_cost": 1685,
+  "als_treatment_no_transport_cost": 1785,
+  "notes": "ET3 Treatment in Place fees are used for BLS and ALS treatment without transport.",
+  "source_url": "https://www.medstar911.org/wp-content/uploads/2022/03/MedStar-Fee-Schedule-as-of-3-1-22.pdf"
+}
+
+--- Processing: https://www.columbus.gov/Services/Public-Safety/Fire/About-Us/Reports/EMS-Report ---
+1. Scraping URL with Firecrawl...
+✓ Scraped successfully. Markdown length: 11291 characters.
+2. Requesting extraction from OpenAI...
+✓ Extraction Complete. Result:
+{
+  "municipality": "Columbus",
+  "bls_treatment_no_transport_cost": null,
+  "als_treatment_no_transport_cost": null,
+  "notes": "The document does not provide specific costs for BLS or ALS treatment without transport. It focuses on transport billing and insurance processes.",
+  "source_url": "https://www.columbus.gov/Services/Public-Safety/Fire/About-Us/Reports/EMS-Report"
+}
+
+--- Processing: https://www.medic911.com/wp-content/uploads/2024/10/2025-Benefits-Brochure-Updated-10.23.2024.pdf ---
+1. Scraping URL with Firecrawl...
+✓ Scraped successfully. Markdown length: 37048 characters.
+2. Requesting extraction from OpenAI...
+✓ Extraction Complete. Result:
+{
+  "municipality": "Mecklenburg EMS Agency",
+  "bls_treatment_no_transport_cost": null,
+  "als_treatment_no_transport_cost": null,
+  "notes": "The document provided is a benefits brochure and does not contain information on EMS billing or treatment costs without transport.",
+  "source_url": "https://www.medic911.com/wp-content/uploads/2024/10/2025-Benefits-Brochure-Updated-10.23.2024.pdf"
+}
+
+--- Processing: http://sf-fire.org/services/ambulance-billing ---
+1. Scraping URL with Firecrawl...
+✓ Scraped successfully. Markdown length: 5039 characters.
+2. Requesting extraction from OpenAI...
+✓ Extraction Complete. Result:
+{
+  "municipality": "San Francisco Fire Department",
+  "bls_treatment_no_transport_cost": 568,
+  "als_treatment_no_transport_cost": 568,
+  "notes": "The fee for 'Treatment without Transportation' applies to both BLS and ALS, as no separate costs are provided.",
+  "source_url": "http://sf-fire.org/services/ambulance-billing"
+}
+
+--- Processing: https://www.indy.gov/activity/in-memoriam-impd-officers ---
+1. Scraping URL with Firecrawl...
+✓ Scraped successfully. Markdown length: 231884 characters.
+2. Requesting extraction from OpenAI...
+Error processing https://www.indy.gov/activity/in-memoriam-impd-officers: 429 Request too large for gpt-4o in organization org-oDFbUnmn7OLZB67GflJh7iYQ on tokens per min (TPM): Limit 30000, Requested 58364. The input or output tokens must be reduced in order to run successfully. Visit https://platform.openai.com/account/rate-limits to learn more.
+
+--- Processing: https://www.seattle.gov/documents/departments/financedepartment/2526proposedbudget/sfd.pdf ---
+1. Scraping URL with Firecrawl...
+✓ Scraped successfully. Markdown length: 30246 characters.
+2. Requesting extraction from OpenAI...
+✓ Extraction Complete. Result:
+{
+  "municipality": "Seattle Fire Department",
+  "bls_treatment_no_transport_cost": null,
+  "als_treatment_no_transport_cost": null,
+  "notes": "The document does not provide specific costs for BLS or ALS treatment without transport. No mention of 'Assessment Non-Transport', 'Treat and Release', or similar terms was found.",
+  "source_url": "https://www.seattle.gov/documents/departments/financedepartment/2526proposedbudget/sfd.pdf"
+}
+
+--- Processing: https://www.denvergov.org/files/assets/public/v/1/civil-service-commission/documents/informational-booklet/2026/1202026/emt-informational-booklet-1.20.2026.pdf ---
+1. Scraping URL with Firecrawl...
+✓ Scraped successfully. Markdown length: 41522 characters.
+2. Requesting extraction from OpenAI...
+✓ Extraction Complete. Result:
+{
+  "municipality": "Denver Fire Department",
+  "bls_treatment_no_transport_cost": null,
+  "als_treatment_no_transport_cost": null,
+  "notes": "The document provided does not contain any information about EMS billing or treatment costs without transport.",
+  "source_url": "https://www.denvergov.org/files/assets/public/v/1/civil-service-commission/documents/informational-booklet/2026/1202026/emt-informational-booklet-1.20.2026.pdf"
+}
+
+--- Processing: https://fems.dc.gov/sites/default/files/dc/sites/fems/page_content/attachments/Ambulance%20Fees%20and%20Charges%2001-01-26_0.pdf ---
+1. Scraping URL with Firecrawl...
+✓ Scraped successfully. Markdown length: 9382 characters.
+2. Requesting extraction from OpenAI...
+✓ Extraction Complete. Result:
+{
+  "municipality": "District of Columbia",
+  "bls_treatment_no_transport_cost": null,
+  "als_treatment_no_transport_cost": null,
+  "notes": "The document does not provide specific costs for BLS or ALS treatment without transport. It only lists fees for services that include transport.",
+  "source_url": "https://fems.dc.gov/sites/default/files/dc/sites/fems/page_content/attachments/Ambulance%20Fees%20and%20Charges%2001-01-26_0.pdf"
+}
+
+--- Test Completed. Saved 19 records. ---
