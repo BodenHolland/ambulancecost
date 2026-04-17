@@ -424,20 +424,8 @@ export default function AmbulanceCost() {
                           <ShieldCheck className="w-8 h-8" />
                         </div>
                         <div className="space-y-1 w-full">
-                          <div className="flex items-center justify-between w-full mb-1">
-                            <div className="flex items-center gap-2 text-emerald-600 font-black text-[10px] uppercase tracking-widest">
-                                Reported Local Rate: {result?.data.city}
-                            </div>
-                            {verifiedTnt.source_url && (
-                              <a 
-                                href={verifiedTnt.source_url} 
-                                target="_blank" 
-                                rel="noopener noreferrer" 
-                                className="text-emerald-600 hover:text-emerald-500 font-bold flex items-center gap-1 bg-emerald-50 px-2 py-0.5 rounded text-[9px] transition-colors"
-                              >
-                                {verifiedTnt.source_label || 'Source'} <ExternalLink className="w-2.5 h-2.5" />
-                              </a>
-                            )}
+                          <div className="flex items-center gap-2 text-emerald-600 font-black text-[10px] uppercase tracking-widest mb-1">
+                              Reported Local Rate: {result?.data.city}
                           </div>
                           <div className="flex items-baseline gap-2">
                             <span className="text-4xl md:text-5xl font-black text-emerald-600">
@@ -457,7 +445,7 @@ export default function AmbulanceCost() {
                                  <span>Official rate reported for this locality.</span>
                                 {verifiedTnt.source_url && (
                                   <a href={verifiedTnt.source_url} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline font-bold flex items-center gap-1 bg-blue-50 px-2 py-0.5 rounded text-[10px]">
-                                    {verifiedTnt.source_label || 'Source View'} <ExternalLink className="w-3 h-3" />
+                                    {verifiedTnt.source_label || 'Source'} <ExternalLink className="w-3 h-3" />
                                   </a>
                                 )}
                               </div>
@@ -482,20 +470,8 @@ export default function AmbulanceCost() {
                           <ShieldCheck className="w-8 h-8" />
                         </div>
                         <div className="space-y-1 w-full">
-                          <div className="flex items-center justify-between w-full mb-1">
-                            <div className="flex items-center gap-2 text-emerald-600 font-black text-[10px] uppercase tracking-widest">
-                              Reported Local Rate: {result?.data.city}
-                            </div>
-                            {matchLocal.sourceUrl && (
-                              <a 
-                                href={matchLocal.sourceUrl} 
-                                target="_blank" 
-                                rel="noopener noreferrer" 
-                                className="text-emerald-600 hover:text-emerald-500 font-bold flex items-center gap-1 bg-emerald-50 px-2 py-0.5 rounded text-[9px] transition-colors"
-                              >
-                                Source <ExternalLink className="w-2.5 h-2.5" />
-                              </a>
-                            )}
+                          <div className="flex items-center gap-2 text-emerald-600 font-black text-[10px] uppercase tracking-widest mb-1">
+                            Reported Local Rate: {result?.data.city}
                           </div>
                           <div className="flex items-baseline gap-2">
                             <span className="text-4xl md:text-5xl font-black text-emerald-600">
@@ -515,7 +491,7 @@ export default function AmbulanceCost() {
                                 <span>{matchLocal.description}</span>
                                 {matchLocal.sourceUrl && (
                                   <a href={matchLocal.sourceUrl} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline font-bold flex items-center gap-1 bg-blue-50 px-2 py-0.5 rounded text-[10px]">
-                                    Source View <ExternalLink className="w-3 h-3" />
+                                    Source <ExternalLink className="w-3 h-3" />
                                   </a>
                                 )}
                               </div>
