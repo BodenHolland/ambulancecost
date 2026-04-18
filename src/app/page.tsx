@@ -134,7 +134,28 @@ export default function AmbulanceCost() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const emergencyKeywords = ['help', 'dying', 'emergency', 'heart attack', 'stroke', 'bleeding', 'accident', 'suicide', '911', 'cpr'];
+  // Cities we have verified data for and want to show at the top of search suggestions
+const PRIORITY_CITIES = [
+  'San Antonio, TX',
+  'Phoenix, AZ',
+  'Philadelphia, PA',
+  'San Diego, CA',
+  'Dallas, TX',
+  'Jacksonville, FL',
+  'Fort Worth, TX',
+  'Columbus, OH',
+  'Charlotte, NC',
+  'Indianapolis, IN',
+  'Miami, FL',
+  'Las Vegas, NV',
+  'San Bernardino, CA',
+  'Chicago, IL',
+  'New York, NY',
+  'Houston, TX',
+  'Los Angeles, CA'
+];
+
+const emergencyKeywords = ['help', 'dying', 'emergency', 'heart attack', 'stroke', 'bleeding', 'accident', 'suicide', '911', 'cpr'];
 
   const handleZipChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
@@ -154,16 +175,56 @@ export default function AmbulanceCost() {
 
     const q = val.toLowerCase().trim();
     const isNum = /^\d/.test(q);
-    const filtered = citiesData.filter(cityTuple => {
-      if (isNum) return cityTuple[2].startsWith(q);
-      const nameFirst = cityTuple[0].toLowerCase();
-      const nameFull = `${cityTuple[0]}, ${cityTuple[1]}`.toLowerCase();
-      // Prefix matching is preferred for cities
-      return nameFirst.startsWith(q) || nameFull.includes(q);
+    
+    // Filter and Deduplicate by City+State
+    const seen = new Set<string>();
+    const filtered: [string, string, string][] = [];
+    
+    for (const cityTuple of citiesData) {
+      const cityName = cityTuple[0];
+      const stateCode = cityTuple[1];
+      const zipCode = cityTuple[2];
+      const cityStateKey = `${cityName}, ${stateCode}`;
+
+      let matches = false;
+      if (isNum) {
+        matches = zipCode.startsWith(q);
+      } else {
+        const nameFirst = cityName.toLowerCase();
+        const nameFull = cityStateKey.toLowerCase();
+        matches = nameFirst.startsWith(q) || nameFull.includes(q);
+      }
+
+      if (matches) {
+        // If it's a number search, we show all zips that match prefix
+        // If it's a name search, we deduplicate so San Antonio, TX only shows once
+        if (isNum) {
+          filtered.push(cityTuple);
+        } else if (!seen.has(cityStateKey)) {
+          filtered.push(cityTuple);
+          seen.add(cityStateKey);
+        }
+      }
+      
+      // Stop early if we have enough raw matches to sort through, 
+      // but keep enough to find priority ones (e.g., first 100 matches)
+      if (filtered.length >= 100) break;
+    }
+
+    // Sort: Priority cities first, then alphabetical
+    const sorted = filtered.sort((a, b) => {
+      const aKey = `${a[0]}, ${a[1]}`;
+      const bKey = `${b[0]}, ${b[1]}`;
+      const aPriority = PRIORITY_CITIES.includes(aKey);
+      const bPriority = PRIORITY_CITIES.includes(bKey);
+      
+      if (aPriority && !bPriority) return -1;
+      if (!aPriority && bPriority) return 1;
+      return aKey.localeCompare(bKey);
     }).slice(0, 8);
 
-    setSuggestions(filtered);
-    setShowSuggestions(filtered.length > 0);
+    setSuggestions(sorted);
+    setShowSuggestions(sorted.length > 0);
   };
 
   const handleSelectSuggestion = (cityTuple: [string, string, string]) => {
@@ -515,12 +576,6 @@ export default function AmbulanceCost() {
                             <div className="flex items-center gap-2 text-slate-500 font-black text-[10px] uppercase tracking-widest">
                               Reported User Rate: {result?.data.city}
                             </div>
-                            <button 
-                              onClick={() => setActiveResource('where-we-get-data')} 
-                              className="text-slate-400 hover:text-slate-500 font-bold flex items-center gap-1 bg-slate-100 px-2 py-0.5 rounded text-[9px] transition-colors"
-                            >
-                              Methodology <ExternalLink className="w-2.5 h-2.5" />
-                            </button>
                           </div>
                           <div className="flex items-baseline gap-2">
                             <span className="text-4xl md:text-5xl font-black text-slate-800">
@@ -563,12 +618,6 @@ export default function AmbulanceCost() {
                         <div className="flex items-center gap-2 text-slate-400 font-black text-[10px] uppercase tracking-widest">
                            Data Unavailable for {result?.data.city || 'Zip'}
                         </div>
-                        <Link 
-                          href="/resources/where-we-get-data" 
-                          className="text-slate-400 hover:text-slate-500 font-bold flex items-center gap-1 bg-slate-100 px-2 py-0.5 rounded text-[9px] transition-colors"
-                        >
-                          Methodology <ExternalLink className="w-2.5 h-2.5" />
-                        </Link>
                       </div>
                       <div className="flex items-baseline gap-2">
                         <span className="text-3xl font-black text-slate-300 uppercase italic">Rate Information Unavailable</span>

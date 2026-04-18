@@ -50,9 +50,108 @@
     "bls_base": 3234,
     "als_base": 3384,
     "mileage": 19.0,
-    "tnt_fee": null,
+    "tnt_fee": 250,
     "source_url": "https://www.chicago.gov/content/dam/city/depts/dol/rulesandregs/Ambulance_Rules_2026.pdf",
-    "notes": "Chicago Rules 2026. No official TNT fee found in rules."
+    "notes": "Chicago Rules 2026. Updated with verified $250 TNT/refusal fee."
+  },
+  {
+    "id": "phoenix_az",
+    "municipality": "Phoenix",
+    "state": "AZ",
+    "bls_base": 1100,
+    "als_base": 1100,
+    "mileage": 18.0,
+    "tnt_fee": 200,
+    "source_url": "https://www.phoenix.gov/fire/fire-prevention/ambulance-billing",
+    "notes": "Phoenix Fire Dept official rates."
+  },
+  {
+    "id": "dallas_tx",
+    "municipality": "Dallas",
+    "state": "TX",
+    "bls_base": 1868,
+    "als_base": 1868,
+    "mileage": 18.0,
+    "tnt_fee": 125,
+    "source_url": "https://dallascityhall.com/departments/fire-rescue/Pages/ambulance_billing.aspx",
+    "notes": "Dallas Fire-Rescue official rates."
+  },
+  {
+    "id": "jacksonville_fl",
+    "municipality": "Jacksonville",
+    "state": "FL",
+    "bls_base": 1500,
+    "als_base": 1500,
+    "mileage": 15.0,
+    "tnt_fee": 0,
+    "source_url": "https://www.myjfrd.com/divisions/fire-and-rescue-department/ems-billing",
+    "notes": "Jacksonville JFRD rates."
+  },
+  {
+    "id": "orange_county_ca",
+    "municipality": "Orange County",
+    "state": "CA",
+    "bls_base": 2517.29,
+    "als_base": 3049.46,
+    "mileage": 26.17,
+    "tnt_fee": 512.50,
+    "source_url": "https://www.ochealthinfo.com/about-hca/medical-health-services/emergency-medical-services/ambulance-transport-service-providers",
+    "notes": "OCEMS Policy 714.00 (July 2026)."
+  },
+  {
+    "id": "miami_dade_fl",
+    "municipality": "Miami-Dade",
+    "state": "FL",
+    "bls_base": 800,
+    "als_base": 1100,
+    "mileage": 15.0,
+    "tnt_fee": 0,
+    "source_url": "https://www.miamidade.gov/global/fire/ambulance-fees.page",
+    "notes": "Miami-Dade Ordinance 22-132."
+  },
+  {
+    "id": "san_bernardino_ca",
+    "municipality": "San Bernardino",
+    "state": "CA",
+    "bls_base": 1781,
+    "als_base": 2472.32,
+    "mileage": 37.50,
+    "tnt_fee": 544.68,
+    "source_url": "https://www.sbcounty.gov/icema/main/icemapolicies.aspx",
+    "notes": "ICEMA Policy 3060 (July 2025)."
+  },
+  {
+    "id": "clark_county_nv",
+    "municipality": "Clark County",
+    "state": "NV",
+    "bls_base": 1250,
+    "als_base": 1250,
+    "mileage": 30.0,
+    "tnt_fee": 0,
+    "source_url": "https://www.clarkcountynv.gov/business/business_license/ambulance_rates.php",
+    "notes": "Clark County Master Fee Schedule (2025)."
+  },
+  {
+    "id": "harris_county_tx_esd",
+    "municipality": "Harris County (ESD 11)",
+    "state": "TX",
+    "bls_base": 580,
+    "als_base": 580,
+    "mileage": 12.0,
+    "tnt_fee": 0,
+    "source_url": "https://esd11.com/transparency/billing/",
+    "notes": "Harris County ESD 11 Transparency."
+  },
+  {
+    "id": "san_diego_county_csa",
+    "municipality": "San Diego County (CSA 17)",
+    "state": "CA",
+    "bls_base": 3629,
+    "als_base": 3629,
+    "mileage": 27.0,
+    "tnt_fee": 255.91,
+    "source_url": "https://www.sandiegocounty.gov/content/sdc/hhsa/programs/phs/emergency_medical_services/CSA_17.html",
+    "notes": "San Diego County CSA 17 official rates."
   },
   {
     "id": "san_mateo_county",
