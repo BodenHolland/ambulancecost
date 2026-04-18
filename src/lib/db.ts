@@ -22,55 +22,89 @@ class D1DbProvider implements DatabaseProvider {
     try {
       const ctx = getRequestContext();
       const db = (ctx.env as any).DB;
-      if (!db) throw new Error('DB binding not found on context env');
+      if (!db) return null;
       return db;
     } catch (e) {
-      throw new Error(
-        'D1 Database binding "DB" is not available.\n' +
-        'In production, ensure it is added in the Cloudflare Dashboard.\n' +
-        'In local development, ensure you are running via Wrangler or Cloudflare Next.js dev plugin.'
-      );
+      return null;
     }
   }
 
-
-
   async getZipData(zip: string) {
-    return await this.db.prepare('SELECT * FROM zip_data WHERE zip = ?').bind(zip).first();
+    const db = this.db;
+    if (!db) return null;
+    try {
+      return await db.prepare('SELECT * FROM zip_data WHERE zip = ?').bind(zip).first();
+    } catch (e) {
+      console.warn('D1 Query Error (getZipData):', e);
+      return null;
+    }
   }
 
   async getAfsRates(contractor: string, locality: string) {
-    const { results } = await this.db.prepare(
-      'SELECT hcpcs, gpci, urban_rate, rural_rate, super_rural_rate FROM afs_rates WHERE contractor = ? AND locality = ?'
-    ).bind(contractor, locality).all();
-    return results;
+    const db = this.db;
+    if (!db) return [];
+    try {
+      const { results } = await db.prepare(
+        'SELECT hcpcs, gpci, urban_rate, rural_rate, super_rural_rate FROM afs_rates WHERE contractor = ? AND locality = ?'
+      ).bind(contractor, locality).all();
+      return results;
+    } catch (e) {
+      console.warn('D1 Query Error (getAfsRates):', e);
+      return [];
+    }
   }
 
   async getCommunityRates(): Promise<CommunityRate[]> {
-    const { results } = await this.db.prepare('SELECT * FROM community_rates').all();
-    return results as CommunityRate[];
+    const db = this.db;
+    if (!db) return [];
+    try {
+      const { results } = await db.prepare('SELECT * FROM community_rates').all();
+      return results as CommunityRate[];
+    } catch (e) {
+      return [];
+    }
   }
 
   async addCommunityRate(rate: CommunityRate): Promise<void> {
-    await this.db.prepare(
-      'INSERT OR REPLACE INTO community_rates (city, state, tntFee, reportedAt) VALUES (?, ?, ?, ?)'
-    ).bind(rate.city, rate.state, rate.tntFee, rate.reportedAt).run();
+    const db = this.db;
+    if (!db) return;
+    try {
+      await db.prepare(
+        'INSERT OR REPLACE INTO community_rates (city, state, tntFee, reportedAt) VALUES (?, ?, ?, ?)'
+      ).bind(rate.city, rate.state, rate.tntFee, rate.reportedAt).run();
+    } catch (e) {
+      console.error('D1 Write Error (addCommunityRate):', e);
+    }
   }
 
   async getInaccuracyReports(): Promise<InaccuracyReport[]> {
-    const { results } = await this.db.prepare('SELECT * FROM inaccuracy_reports').all();
-    return results as InaccuracyReport[];
+    const db = this.db;
+    if (!db) return [];
+    try {
+      const { results } = await db.prepare('SELECT * FROM inaccuracy_reports').all();
+      return results as InaccuracyReport[];
+    } catch (e) {
+      return [];
+    }
   }
 
   async addInaccuracyReport(report: InaccuracyReport): Promise<void> {
-    await this.db.prepare(
-      'INSERT OR IGNORE INTO inaccuracy_reports (city, reportedAt) VALUES (?, ?)'
-    ).bind(report.city, report.reportedAt).run();
+    const db = this.db;
+    if (!db) return;
+    try {
+      await db.prepare(
+        'INSERT OR IGNORE INTO inaccuracy_reports (city, reportedAt) VALUES (?, ?)'
+      ).bind(report.city, report.reportedAt).run();
+    } catch (e) {
+      console.error('D1 Write Error (addInaccuracyReport):', e);
+    }
   }
 
   async cacheCity(zip: string, city: string): Promise<void> {
+    const db = this.db;
+    if (!db) return;
     try {
-      await this.db.prepare(
+      await db.prepare(
         'UPDATE zip_data SET city = ? WHERE zip = ? AND (city IS NULL OR city = "")'
       ).bind(city, zip).run();
     } catch (e) {
@@ -79,48 +113,55 @@ class D1DbProvider implements DatabaseProvider {
   }
 
   async getUnifiedPricing(zip: string) {
+    const db = this.db;
+    if (!db) return null;
     const prefix = zip.substring(0, 3);
     let matchLevel: string | null = null;
+    let mapped = null;
 
-    // Level 1: Direct ZIP mapping
-    let mapped = await this.db.prepare(`
-      SELECT e.* 
-      FROM zip_mappings m
-      JOIN pricing_entities e ON m.entity_id = e.id
-      WHERE m.zip = ?
-    `).bind(zip).first();
-    if (mapped) matchLevel = 'zip';
-
-    // Level 2: 3-digit prefix mapping
-    if (!mapped) {
-      mapped = await this.db.prepare(`
+    try {
+      // Level 1: Direct ZIP mapping
+      mapped = await db.prepare(`
         SELECT e.* 
-        FROM prefix_mappings p
-        JOIN pricing_entities e ON p.entity_id = e.id
-        WHERE p.prefix = ?
-      `).bind(prefix).first();
-      if (mapped) matchLevel = 'prefix';
-    }
+        FROM zip_mappings m
+        JOIN pricing_entities e ON m.entity_id = e.id
+        WHERE m.zip = ?
+      `).bind(zip).first();
+      if (mapped) matchLevel = 'zip';
 
-    // Level 3: Statewide average
-    if (!mapped) {
-      const zipRow = await this.db.prepare('SELECT state FROM zip_data WHERE zip = ?').bind(zip).first();
-      if (zipRow?.state) {
-        mapped = await this.db.prepare(`
-          SELECT * FROM pricing_entities
-          WHERE estimate_type = 'statewide_average' AND state = ?
-          LIMIT 1
-        `).bind(zipRow.state).first();
-        if (mapped) matchLevel = 'statewide_average';
+      // Level 2: 3-digit prefix mapping
+      if (!mapped) {
+        mapped = await db.prepare(`
+          SELECT e.* 
+          FROM prefix_mappings p
+          JOIN pricing_entities e ON p.entity_id = e.id
+          WHERE p.prefix = ?
+        `).bind(prefix).first();
+        if (mapped) matchLevel = 'prefix';
       }
-    }
 
-    // Level 4: National average fallback
-    if (!mapped) {
-      mapped = await this.db.prepare(`
-        SELECT * FROM pricing_entities WHERE estimate_type = 'national_average' LIMIT 1
-      `).first();
-      if (mapped) matchLevel = 'national_average';
+      // Level 3: Statewide average
+      if (!mapped) {
+        const zipRow = await db.prepare('SELECT state FROM zip_data WHERE zip = ?').bind(zip).first() as any;
+        if (zipRow?.state) {
+          mapped = await db.prepare(`
+            SELECT * FROM pricing_entities
+            WHERE estimate_type = 'statewide_average' AND state = ?
+            LIMIT 1
+          `).bind(zipRow.state).first();
+          if (mapped) matchLevel = 'statewide_average';
+        }
+      }
+
+      // Level 4: National average fallback
+      if (!mapped) {
+        mapped = await db.prepare(`
+          SELECT * FROM pricing_entities WHERE estimate_type = 'national_average' LIMIT 1
+        `).first();
+        if (mapped) matchLevel = 'national_average';
+      }
+    } catch (e) {
+      console.warn('D1 Query Error (getUnifiedPricing):', e);
     }
 
     if (mapped) {
@@ -157,7 +198,7 @@ class D1DbProvider implements DatabaseProvider {
           verified_date: mapped.last_verified || mapped.effective_date || mapped.last_updated,
           estimate_type: mapped.estimate_type,
           match_level: matchLevel,
-        } : null,
+          } : null,
       };
     }
     return null;
