@@ -205,10 +205,6 @@ const emergencyKeywords = ['help', 'dying', 'emergency', 'heart attack', 'stroke
           seen.add(cityStateKey);
         }
       }
-      
-      // Stop early if we have enough raw matches to sort through, 
-      // but keep enough to find priority ones (e.g., first 100 matches)
-      if (filtered.length >= 100) break;
     }
 
     // Sort: Priority cities first, then alphabetical
@@ -377,7 +373,7 @@ const emergencyKeywords = ['help', 'dying', 'emergency', 'heart attack', 'stroke
                 
                 {/* Autocomplete Dropdown */}
                 {showSuggestions && (
-                  <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-2xl border border-slate-100 overflow-hidden z-50 text-left">
+                  <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-2xl border border-slate-100 overflow-y-auto max-h-80 z-50 text-left">
                     <ul className="py-2">
                       {suggestions.map((s, idx) => (
                         <li key={idx}>
