@@ -86,7 +86,6 @@ interface ZipData {
 export default function AmbulanceCost() {
   const [zip, setZip] = useState('');
   const [miles, setMiles] = useState(1);
-  const [serviceType, setServiceType] = useState<'BLS' | 'ALS'>('BLS');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<{
@@ -102,6 +101,7 @@ export default function AmbulanceCost() {
   const [showKeywordWarning, setShowKeywordWarning] = useState(false);
   const [communityRates, setCommunityRates] = useState<CommunityRate[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [submissionType, setSubmissionType] = useState<'tnt' | 'transport'>('tnt');
   const [isInaccuracyModalOpen, setIsInaccuracyModalOpen] = useState(false);
   const [flaggedCities, setFlaggedCities] = useState<InaccuracyReport[]>([]);
   const [activeResource, setActiveResource] = useState<string | null>(null);
@@ -208,7 +208,7 @@ export default function AmbulanceCost() {
         }
       } else {
         const data: ZipData = await response.json();
-        const calc = calculateEstimate(serviceType, miles, data.type, data.rates || null, data.verified_market || null);
+        const calc = calculateEstimate('BLS', miles, data.type, data.rates || null, data.verified_market || null);
         setResult({ calc, data });
       }
     } catch (err) {
@@ -401,7 +401,8 @@ export default function AmbulanceCost() {
             ))}
           </div>
         ) : (
-          <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+          <>
+            <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
 
             {/* THING NUMBER ONE: Is Arrival Free? */}
             <div className="bg-white rounded-[2rem] md:rounded-[2.5rem] shadow-2xl border-4 border-blue-600 overflow-hidden relative">
@@ -419,10 +420,6 @@ export default function AmbulanceCost() {
 
                   if (verifiedTnt) {
                     return (
-                      <div className="flex flex-col md:flex-row gap-6 items-start">
-                        <div className="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center flex-shrink-0">
-                          <ShieldCheck className="w-8 h-8" />
-                        </div>
                         <div className="space-y-1 w-full">
                           <div className="flex items-center gap-2 text-emerald-600 font-black text-[10px] uppercase tracking-widest mb-1">
                               Reported Local Rate: {result?.data.city}
@@ -459,16 +456,11 @@ export default function AmbulanceCost() {
                             </button>
                           </div>
                         </div>
-                      </div>
                     );
                   }
 
                   if (matchLocal) {
                     return (
-                      <div className="flex flex-col md:flex-row gap-6 items-start">
-                        <div className="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center flex-shrink-0">
-                          <ShieldCheck className="w-8 h-8" />
-                        </div>
                         <div className="space-y-1 w-full">
                           <div className="flex items-center gap-2 text-emerald-600 font-black text-[10px] uppercase tracking-widest mb-1">
                             Reported Local Rate: {result?.data.city}
@@ -513,16 +505,11 @@ export default function AmbulanceCost() {
                             </div>
                           )}
                         </div>
-                      </div>
                     );
                   }
 
                   if (matchCommunity) {
                     return (
-                      <div className="flex flex-col md:flex-row gap-6 items-start">
-                        <div className="w-14 h-14 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center flex-shrink-0">
-                          <AlertTriangle className="w-8 h-8" />
-                        </div>
                         <div className="space-y-1 w-full">
                           <div className="flex items-center justify-between w-full mb-1">
                             <div className="flex items-center gap-2 text-slate-500 font-black text-[10px] uppercase tracking-widest">
@@ -567,47 +554,44 @@ export default function AmbulanceCost() {
                             </div>
                           )}
                         </div>
-                      </div>
                     );
                   }
 
                   return (
-                    <div className="flex flex-col md:flex-row gap-6 items-start">
-                      <div className="w-14 h-14 bg-slate-100 text-slate-400 rounded-2xl flex items-center justify-center flex-shrink-0">
-                        <ShieldAlert className="w-8 h-8" />
+                    <div className="space-y-1 w-full">
+                      <div className="flex items-center justify-between w-full mb-1">
+                        <div className="flex items-center gap-2 text-slate-400 font-black text-[10px] uppercase tracking-widest">
+                           Data Unavailable for {result?.data.city || 'Zip'}
+                        </div>
+                        <Link 
+                          href="/resources/where-we-get-data" 
+                          className="text-slate-400 hover:text-slate-500 font-bold flex items-center gap-1 bg-slate-100 px-2 py-0.5 rounded text-[9px] transition-colors"
+                        >
+                          Methodology <ExternalLink className="w-2.5 h-2.5" />
+                        </Link>
                       </div>
-                      <div className="space-y-1 w-full">
-                        <div className="flex items-center justify-between w-full mb-1">
-                          <div className="flex items-center gap-2 text-slate-400 font-black text-[10px] uppercase tracking-widest">
-                             Data Unavailable for {result?.data.city || 'Zip'}
-                          </div>
-                          <Link 
-                            href="/resources/where-we-get-data" 
-                            className="text-slate-400 hover:text-slate-500 font-bold flex items-center gap-1 bg-slate-100 px-2 py-0.5 rounded text-[9px] transition-colors"
-                          >
-                            Methodology <ExternalLink className="w-2.5 h-2.5" />
-                          </Link>
-                        </div>
-                        <div className="flex items-baseline gap-2">
-                          <span className="text-3xl font-black text-slate-300 uppercase italic">Rate Information Unavailable</span>
-                        </div>
-                        <p className="text-slate-500 text-sm font-medium leading-relaxed">
-                          Commonly referred to as "Treatment No Transport" (TNT) fees, these occur when paramedics provide medical care but do not transport you. Most municipalities charge between $150–$600.
-                          <button onClick={() => setActiveResource('treatment-without-transport-explained')} className="ml-2 text-blue-600 font-bold hover:underline inline-flex items-center gap-1 group/link text-left">
-                            Is this covered? <ChevronRight className="w-3 h-3 group-hover/link:translate-x-0.5 transition-transform" />
-                          </button>
+                      <div className="flex items-baseline gap-2">
+                        <span className="text-3xl font-black text-slate-300 uppercase italic">Rate Information Unavailable</span>
+                      </div>
+                      <p className="text-slate-500 text-sm font-medium leading-relaxed">
+                        Commonly referred to as "Treatment No Transport" (TNT) fees, these occur when paramedics provide medical care but do not transport you. Most municipalities charge between $150–$600.
+                        <button onClick={() => setActiveResource('treatment-without-transport-explained')} className="ml-2 text-blue-600 font-bold hover:underline inline-flex items-center gap-1 group/link text-left">
+                          Is this covered? <ChevronRight className="w-3 h-3 group-hover/link:translate-x-0.5 transition-transform" />
+                        </button>
+                      </p>
+                      <div className="bg-blue-50 border border-blue-100 rounded-2xl p-5 mt-4 flex flex-col sm:flex-row items-center justify-between gap-6">
+                        <p className="text-blue-900/80 text-sm leading-relaxed font-medium text-center sm:text-left flex-1">
+                          We are crowd-sourcing a national database to fill gaps in federal records. <strong>If you know the local policy or have recently been billed</strong>, please support this effort by submitting your rate. <button onClick={() => setActiveResource('where-we-get-data')} className="underline font-bold hover:text-blue-700 transition-colors">Learn how we source our data.</button>
                         </p>
-                        <div className="bg-blue-50 border border-blue-100 rounded-2xl p-5 mt-4 flex flex-col sm:flex-row items-center justify-between gap-6">
-                          <p className="text-blue-900/80 text-sm leading-relaxed font-medium text-center sm:text-left flex-1">
-                            We are crowd-sourcing a national database to fill gaps in federal records. <strong>If you know the local policy or have recently been billed</strong>, please support this effort by submitting your rate. <button onClick={() => setActiveResource('where-we-get-data')} className="underline font-bold hover:text-blue-700 transition-colors">Learn how we source our data.</button>
-                          </p>
-                          <button 
-                            onClick={() => setIsModalOpen(true)}
-                            className="bg-blue-600 text-white font-black text-sm px-6 py-3 rounded-xl hover:bg-blue-500 transition-all shadow-lg shadow-blue-600/20 active:scale-95 whitespace-nowrap w-full sm:w-auto"
-                          >
-                            Submit Local Rate
-                          </button>
-                        </div>
+                        <button 
+                          onClick={() => {
+                            setSubmissionType('tnt');
+                            setIsModalOpen(true);
+                          }}
+                          className="bg-blue-600 text-white font-black text-sm px-6 py-3 rounded-xl hover:bg-blue-500 transition-all shadow-lg shadow-blue-600/20 active:scale-95 whitespace-nowrap w-full sm:w-auto"
+                        >
+                          Submit Local Rate
+                        </button>
                       </div>
                     </div>
                   );
@@ -615,261 +599,149 @@ export default function AmbulanceCost() {
               </div>
             </div>
 
-            {/* Transport Selection Tiles */}
-            <div className="space-y-6">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between px-2 gap-2">
-                <h3 className="text-2xl font-black text-slate-900 tracking-tight">Select Transport Level</h3>
-                <button onClick={() => setActiveResource('bls-vs-als-differences')} className="text-blue-600 font-bold text-sm hover:text-blue-800 transition-colors inline-flex items-center gap-1 group text-left">
-                  Learn more about the difference <ExternalLink className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </button>
-              </div>
-              
-              <div className="grid md:grid-cols-2 gap-6">
-                <button 
-                  onClick={() => setServiceType('BLS')}
-                  className={cn(
-                    "relative p-6 pt-10 rounded-[2rem] text-left transition-all group overflow-hidden border-2",
-                    serviceType === 'BLS' 
-                      ? "bg-white border-blue-600 shadow-xl shadow-blue-600/10" 
-                      : "bg-slate-50 border-transparent hover:bg-slate-100/80 hover:border-slate-200"
-                  )}
-                >
-                  {serviceType === 'BLS' && (
-                    <div className="absolute top-0 right-0 bg-blue-600 text-white px-4 py-1.5 rounded-bl-[1.5rem] text-[10px] font-black uppercase tracking-widest shadow-sm">
-                      Selected
-                    </div>
-                  )}
-                  <div className="flex items-start gap-4 mb-4">
-                    <div className={cn(
-                      "w-10 h-10 rounded-xl flex items-center justify-center transition-all flex-shrink-0 mt-1 overflow-hidden",
-                      serviceType === 'BLS' ? "bg-blue-100" : "bg-white shadow-sm"
-                    )}>
-                      <img src="/emt-logo.png" alt="EMT Logo" className="w-6 h-6 object-contain" />
-                    </div>
-                    <div>
-                      <h4 className="text-xl font-black text-slate-900 mb-1">Basic Care (BLS)</h4>
-                      <p className="text-slate-500 text-sm leading-relaxed">Standard EMT-staffed transport for non-life-threatening medical needs.</p>
-                    </div>
-                  </div>
-                  
 
-                </button>
-
-                <button 
-                  onClick={() => setServiceType('ALS')}
-                  className={cn(
-                    "relative p-6 pt-10 rounded-[2rem] text-left transition-all group overflow-hidden border-2",
-                    serviceType === 'ALS' 
-                      ? "bg-white border-indigo-600 shadow-xl shadow-indigo-600/10" 
-                      : "bg-slate-50 border-transparent hover:bg-slate-100/80 hover:border-slate-200"
-                  )}
-                >
-                  {serviceType === 'ALS' && (
-                    <div className="absolute top-0 right-0 bg-indigo-600 text-white px-4 py-1.5 rounded-bl-[1.5rem] text-[10px] font-black uppercase tracking-widest shadow-sm">
-                      Selected
-                    </div>
-                  )}
-                  <div className="flex items-start gap-4 mb-4">
-                    <div className={cn(
-                      "w-10 h-10 rounded-xl flex items-center justify-center transition-all flex-shrink-0 mt-1",
-                      serviceType === 'ALS' ? "bg-indigo-100 text-indigo-600" : "bg-white text-slate-400 shadow-sm"
-                    )}>
-                      <TrendingUp className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <h4 className="text-xl font-black text-slate-900 mb-1">Paramedic (ALS)</h4>
-                      <p className="text-slate-500 text-sm leading-relaxed">Advanced medical intervention staffed by Paramedics for critical needs.</p>
-                    </div>
-                  </div>
-
-
-                </button>
-              </div>
-            </div>
 
             {/* Price Cards (The Market vs Medicare ones) */}
-            <div className="grid md:grid-cols-2 gap-8">
-              {/* Estimated Market Rate Card */}
+            <div className="space-y-8">
+              {/* Estimated Transport Fees Card */}
               <div 
-                className="text-white p-6 md:p-8 rounded-[2.5rem] shadow-2xl relative overflow-hidden group border border-white/5" 
-                style={{ backgroundColor: '#111827' }}
+                className="bg-white rounded-[2rem] md:rounded-[2.5rem] shadow-2xl border-4 border-sky-600 overflow-hidden relative"
               >
-                {/* Subtle Glow Background */}
-                <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/5 blur-[80px] rounded-full -mr-20 -mt-20 group-hover:bg-amber-500/10 transition-colors duration-700" />
-                
-                <div className="relative z-10">
-                  <div className="flex items-center gap-4 mb-8">
-                    <div 
-                      className="w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110 duration-500" 
-                      style={{ backgroundColor: result.data.verified_market ? 'rgba(16, 185, 129, 0.1)' : 'rgba(245, 158, 11, 0.1)' }}
-                    >
-                      {result.data.verified_market ? (
-                        <ShieldCheck className="w-6 h-6 md:w-8 md:h-8 text-emerald-500" />
-                      ) : (
-                        <TrendingUp className="w-6 h-6 md:w-8 md:h-8 text-amber-500" />
-                      )}
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between mb-1">
-                        <h2 
-                          className="font-bold text-[10px] uppercase tracking-[0.3em]" 
-                          style={{ color: result.data.verified_market ? '#10B981' : '#9CA3AF' }}
-                        >
-                           {result.data.verified_market ? 'Reported Local Rate' : 'Market Average'}
-                        </h2>
-                        {result.data.verified_market?.source_url ? (
-                          <a 
-                            href={result.data.verified_market.source_url} 
-                            target="_blank" 
-                            rel="noopener noreferrer" 
-                            className="text-[10px] text-emerald-400 hover:text-emerald-300 font-bold flex items-center gap-1 bg-emerald-500/10 px-2 py-0.5 rounded transition-colors"
-                          >
-                            {result.data.verified_market.source_label || 'Source'} <ExternalLink className="w-2.5 h-2.5" />
-                          </a>
-                        ) : (
-                          <button 
-                            onClick={() => setActiveResource('where-we-get-data')} 
-                            className="text-[10px] text-amber-400 hover:text-amber-300 font-bold flex items-center gap-1 bg-amber-500/10 px-2 py-0.5 rounded transition-colors"
-                          >
-                            Methodology <ExternalLink className="w-2.5 h-2.5" />
-                          </button>
-                        )}
-                      </div>
-                      <p className="text-white font-black text-xl md:text-2xl italic tracking-tight">
-                         {result.data.verified_market ? 'Reported Market Rate' : 'Estimated Market Rate'}
-                      </p>
-                      {/* Estimate Source Badge */}
-                      {(() => {
-                        const ml = result.data.entity_info?.match_level || result.data.verified_market?.match_level;
-                        if (!ml) return null;
-                        const labels: Record<string, { text: string; color: string; bg: string }> = {
-                          zip:               { text: '✓ Exact ZIP Match',          color: '#10B981', bg: 'rgba(16,185,129,0.12)' },
-                          prefix:            { text: '≈ Regional Prefix Match',    color: '#60A5FA', bg: 'rgba(96,165,250,0.12)' },
-                          statewide_average: { text: '~ Statewide Avg (Estimated)',color: '#FBBF24', bg: 'rgba(251,191,36,0.12)'  },
-                          national_average:  { text: '~ National Avg (Estimated)', color: '#F87171', bg: 'rgba(248,113,113,0.12)' },
-                        };
-                        const badge = labels[ml];
-                        if (!badge) return null;
-                        return (
-                          <span className="inline-block mt-1 px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-widest"
-                            style={{ color: badge.color, backgroundColor: badge.bg }}>
-                            {badge.text}
-                          </span>
-                        );
-                      })()}
-                    </div>
+                <div className="bg-sky-600 text-white px-6 md:px-8 py-4 md:py-5 flex items-center justify-between">
+                  <div>
+                    <p className="text-xl md:text-2xl font-black">
+                      {result.data.verified_market ? 'Reported Transport Fees' : 'Estimated Transport Fees'}
+                    </p>
                   </div>
+                  {result.data.verified_market?.source_url ? (
+                    <a href={result.data.verified_market.source_url} target="_blank" rel="noopener noreferrer" className="text-white hover:text-sky-100 font-bold flex items-center gap-1 bg-white/10 px-3 py-1.5 rounded-xl text-[10px] transition-colors border border-white/20">
+                      {result.data.verified_market.source_label || 'Source'} <ExternalLink className="w-3 h-3" />
+                    </a>
+                  ) : (
+                    <button onClick={() => setActiveResource('where-we-get-data')} className="text-white hover:text-sky-100 font-bold flex items-center gap-1 bg-white/10 px-3 py-1.5 rounded-xl text-[10px] transition-colors border border-white/20">
+                      Methodology <ExternalLink className="w-3 h-3" />
+                    </button>
+                  )}
+                </div>
 
+                <div className="p-6 md:p-8">
                   <div className="mb-8 text-center sm:text-left">
                     <div className="flex items-baseline justify-center sm:justify-start gap-1">
                       <span 
-                        className="font-black text-5xl md:text-7xl lg:text-8xl tracking-tighter drop-shadow-[0_0_15px_rgba(245,158,11,0.3)]" 
-                        style={{ color: result.data.verified_market ? '#10B981' : '#F59E0B' }}
+                        className="font-black text-4xl md:text-5xl lg:text-7xl tracking-tighter text-slate-900" 
                       >
-                        ${(serviceType === 'ALS' 
-                            ? (result.data.verified_market?.als_base || (calculateEstimate(serviceType, 0, result.data.type, result.data.rates || null).baseRate * 3))
-                            : (result.data.verified_market?.bls_base || (calculateEstimate(serviceType, 0, result.data.type, result.data.rates || null).baseRate * 3))
-                          ).toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                        ${Math.round(result.data.verified_market?.bls_base || (calculateEstimate('BLS', 0, result.data.type, result.data.rates || null).baseRate * 3)).toLocaleString()}
+                        <span className="mx-2 opacity-30 text-3xl">—</span>
+                        ${Math.round(result.data.verified_market?.als_base || (calculateEstimate('ALS', 0, result.data.type, result.data.rates || null).baseRate * 3)).toLocaleString()}
                       </span>
-                      {!result.data.verified_market && <span className="font-black text-sm md:text-base opacity-40 uppercase tracking-widest ml-1" style={{ color: '#9CA3AF' }}>Est.</span>}
                     </div>
-                    <p className="font-bold text-[11px] mt-2 uppercase tracking-[0.1em] italic" style={{ color: '#9CA3AF' }}>
-                       {result.data.verified_market ? 'Reported Base Rate' : 'Market Base Rate Estimate'}
+                    <p className="font-bold text-[11px] mt-2 uppercase tracking-[0.1em] italic flex items-center gap-2 justify-center sm:justify-start text-slate-400">
+                       Estimated Price Range (BLS - ALS)
+                       <button onClick={() => setActiveResource('bls-vs-als-differences')} className="text-blue-400 hover:text-blue-600 transition-colors">
+                         <Info className="w-3.5 h-3.5" />
+                       </button>
                     </p>
                   </div>
 
                   <p 
-                    className="text-xs md:text-sm leading-relaxed mb-10 pl-5 border-l-2" 
-                    style={{ color: '#9CA3AF', borderColor: result.data.verified_market ? '#10B98133' : '#F59E0B33' }}
+                    className="text-xs md:text-sm leading-relaxed mb-10 pl-5 border-l-2 border-slate-200 text-slate-500" 
                   >
                     {result.data.verified_market
-                       ? `This rate was reported for ${result.data.city} on ${result.data.verified_market.verified_date}. It reflects the current billing schedule for local ambulance providers.`
-                       : 'No specific rate data has been reported for this area — this is an estimate based on approximately 3× the Medicare reimbursement rate. Ambulance providers commonly bill at multiples of Medicare as a starting point for negotiations with private insurers. The actual amount you are billed may vary by provider.'}
+                       ? `This rate reflects the official municipal billing schedule reported for ${result.data.city} on ${result.data.verified_market.verified_date}.`
+                       : 'No specific rate data has been reported for this area — this is an estimate based on approximately 3× the Medicare reimbursement rate. The actual amount you are billed may vary by provider.'}
                   </p>
 
-                  <div className="space-y-4 pt-8" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+                  <div className="space-y-4 pt-8 border-t border-slate-100">
                     <div 
-                      className="flex justify-between items-center p-6 rounded-3xl transition-all hover:bg-white/5 border border-white/5"
-                      style={{ backgroundColor: 'rgba(255,255,255,0.02)' }}
+                      className="flex justify-between items-center p-6 rounded-3xl transition-all bg-slate-50 border border-slate-100"
                     >
                       <div>
                         <span 
-                          className="font-black text-[10px] uppercase tracking-widest block mb-1" 
-                          style={{ color: result.data.verified_market ? '#10B981' : '#F59E0B' }}
+                          className="font-black text-[10px] uppercase tracking-widest block mb-1 text-slate-900"
                         >
                           + Per Mile Transported
                         </span>
-                        <p className="text-[10px] font-medium uppercase opacity-50" style={{ color: '#9CA3AF' }}>Additional {result.data.type} loaded mile rate</p>
+                        <p className="text-[10px] font-medium uppercase text-slate-400">Additional loaded mile rate</p>
                       </div>
                       <div className="text-right">
                         <span 
-                          className="font-black text-2xl md:text-4xl block leading-none" 
-                          style={{ color: result.data.verified_market ? '#10B981' : '#F59E0B' }}
+                          className="font-black text-2xl md:text-3xl block leading-none text-slate-900"
                         >
-                          ${(result.data.verified_market?.mileage || (calculateEstimate(serviceType, 1, result.data.type, result.data.rates || null).mileageRate * 3)).toFixed(2)}
+                          ${Math.round(result.data.verified_market?.mileage || (calculateEstimate('BLS', 1, result.data.type, result.data.rates || null).mileageRate * 3))}
                         </span>
                       </div>
                     </div>
                   </div>
 
-                  <div className="mt-8 flex items-center justify-between border-t border-white/5 pt-6">
+                  <div className="mt-8 flex items-center justify-between border-t border-slate-100 pt-6">
                     <div className="flex flex-col gap-0.5">
                       {result.data.verified_market?.verified_date && (
-                        <span className="text-[10px] text-slate-500 font-medium italic">Last updated: {result.data.verified_market.verified_date}</span>
+                        <span className="text-[10px] text-slate-400 font-medium italic">Last updated: {result.data.verified_market.verified_date}</span>
                       )}
                       {result.data.entity_info?.effective_date && (
-                        <span className="text-[10px] text-slate-500 font-medium italic">Effective: {result.data.entity_info.effective_date}</span>
-                      )}
-                      {(result.data.entity_info?.notes || result.data.verified_market?.notes) && (
-                        <p className="text-[10px] text-slate-400 font-medium italic mt-1 max-w-[220px]">
-                          {result.data.entity_info?.notes || result.data.verified_market?.notes}
-                        </p>
+                        <span className="text-[10px] text-slate-400 font-medium italic">Effective: {result.data.entity_info.effective_date}</span>
                       )}
                     </div>
-                    <button 
-                      onClick={() => setIsInaccuracyModalOpen(true)}
-                      className="text-[10px] text-slate-400 font-bold bg-white/5 px-3 py-1.5 rounded-full hover:bg-white/10 transition-colors uppercase tracking-wider"
-                    >
-                      Report Inaccurate Data
-                    </button>
+                    {result.data.verified_market ? (
+                      <button 
+                        onClick={() => setIsInaccuracyModalOpen(true)}
+                        className="text-[10px] text-slate-400 font-bold bg-slate-100/50 px-3 py-1 rounded-full hover:bg-slate-200 transition-colors whitespace-nowrap"
+                      >
+                        Report Inaccurate Data
+                      </button>
+                    ) : (
+                      <button 
+                        onClick={() => {
+                          setSubmissionType('transport');
+                          setIsModalOpen(true);
+                        }}
+                        className="text-[10px] text-sky-700 font-bold bg-sky-50 px-3 py-1.5 rounded-full hover:bg-sky-100 transition-colors whitespace-nowrap border border-sky-200"
+                      >
+                        Submit Verified Rates
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>
 
-              {/* Medicare Benchmark Card */}
-              <div className="bg-white p-6 md:p-8 rounded-[2.5rem] shadow-2xl border-4 border-blue-50 relative overflow-hidden group">
-                <div className="flex items-center gap-4 mb-8">
-                  <div className="w-12 h-12 md:w-14 md:h-14 bg-blue-100 rounded-[1.25rem] flex items-center justify-center">
-                    <DollarSign className="w-6 h-6 md:w-8 md:h-8 text-blue-600" />
-                  </div>
+              {/* Medicare Benchmark Rate Card */}
+              <div className="bg-white rounded-[2rem] md:rounded-[2.5rem] shadow-2xl border-4 border-indigo-700 overflow-hidden relative">
+                <div className="bg-indigo-700 text-white px-6 md:px-8 py-5 md:py-6 flex items-center justify-between">
                   <div>
-                    <h2 className="text-slate-400 font-bold text-[10px] uppercase tracking-[0.2em] mb-1">Standard Calculation</h2>
-                    <p className="text-slate-900 font-black text-xl md:text-2xl italic">Medicare Benchmark</p>
+                    <p className="text-xl md:text-3xl font-black">Medicare Benchmark Rates</p>
                   </div>
                 </div>
                 
-                <div className="mb-10 text-center sm:text-left">
-                  <div className="flex items-baseline justify-center sm:justify-start gap-1">
-                    <span className="text-slate-900 font-black text-5xl md:text-6xl lg:text-7xl tracking-tighter">
-                      ${Math.floor(calculateEstimate(serviceType, 0, result.data.type, result.data.rates || null).baseRate).toLocaleString()}
-                    </span>
-                    <span className="text-slate-400 font-black text-xl md:text-2xl">.{(calculateEstimate(serviceType, 0, result.data.type, result.data.rates || null).baseRate % 1).toFixed(2).substring(2)}</span>
-                  </div>
-                  <p className="text-slate-400 font-bold text-xs mt-2 uppercase tracking-wide">Official Schedule Base Rate</p>
-                </div>
-
-                <p className="text-slate-500 text-xs md:text-sm leading-relaxed mb-10 border-l-2 border-blue-500/30 pl-4">
-                  This is the "official" rate established by the federal government for your specific zip code in 2026. Medicare uses this baseline to reimburse providers for medically necessary transport. While private companies often charge more, this figure serves as the industry standard for what the service is actually valued at by federal auditors.
-                </p>
-
-                <div className="space-y-4 border-t border-slate-100 pt-8">
-                  <div className="flex justify-between items-center bg-blue-50 p-5 rounded-[1.5rem] border border-blue-100">
-                    <div>
-                      <span className="text-blue-700 font-black text-[10px] uppercase tracking-widest block mb-1">+ Per Mile Transported</span>
-                      <p className="text-blue-900/60 font-medium text-[10px] uppercase">Additional {result.data.type} loaded mile rate</p>
+                <div className="p-6 md:p-8">
+                  <div className="mb-10 text-center sm:text-left">
+                    <div className="flex items-baseline justify-center sm:justify-start gap-1">
+                      <span className="text-slate-900 font-black text-4xl md:text-5xl lg:text-7xl tracking-tighter">
+                        ${Math.floor(calculateEstimate('BLS', 0, result.data.type, result.data.rates || null).baseRate).toLocaleString()}
+                        <span className="mx-2 opacity-20 text-3xl">—</span>
+                        ${Math.floor(calculateEstimate('ALS', 0, result.data.type, result.data.rates || null).baseRate).toLocaleString()}
+                      </span>
                     </div>
-                    <div className="text-right flex flex-col justify-center">
-                      <span className="text-blue-600 font-black text-2xl md:text-3xl block leading-none">${calculateEstimate(serviceType, 1, result.data.type, result.data.rates || null).mileageRate.toFixed(2)}</span>
+                    <p className="text-indigo-400 font-bold text-[11px] mt-2 uppercase tracking-widest flex items-center gap-2 justify-center sm:justify-start">
+                      Official Schedule Range (BLS - ALS)
+                      <button onClick={() => setActiveResource('bls-vs-als-differences')} className="text-indigo-500 hover:text-indigo-600 transition-colors">
+                        <Info className="w-3.5 h-3.5" />
+                      </button>
+                    </p>
+                  </div>
+
+                  <p className="text-slate-500 text-xs md:text-sm leading-relaxed mb-10 border-l-2 border-indigo-600/20 pl-4">
+                    This is the "official" rate established by the federal government for your specific zip code in 2026. Medicare uses this baseline to reimburse providers for medically necessary transport. While private companies often charge more, this figure serves as the industry standard for what the service is actually valued at by federal auditors.
+                  </p>
+
+                  <div className="space-y-4 border-t border-slate-100 pt-8">
+                    <div className="flex justify-between items-center bg-indigo-50 p-6 rounded-3xl border border-indigo-100">
+                      <div>
+                        <span className="text-indigo-700 font-black text-[10px] uppercase tracking-widest block mb-1">+ Per Mile Transported</span>
+                        <p className="text-indigo-900/40 font-medium text-[10px] uppercase">Additional loaded mile rate</p>
+                      </div>
+                      <div className="text-right flex flex-col justify-center">
+                        <span className="text-indigo-700 font-black text-2xl md:text-3xl block leading-none">${calculateEstimate('BLS', 1, result.data.type, result.data.rates || null).mileageRate.toFixed(2)}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -950,7 +822,8 @@ export default function AmbulanceCost() {
                 Estimated ambulance costs are based on publicly available fee schedules and regional averages. Actual charges may vary depending on the ambulance provider, service level, mileage, medical treatment provided, and insurance coverage. Providers in the same area may charge different rates for similar services. For details about coverage and out-of-pocket costs, contact your insurance provider.
               </p>
             </div>
-          </div>
+            </div>
+          </>
         )}
       </main>
 
@@ -960,11 +833,12 @@ export default function AmbulanceCost() {
 
 
       <CommunitySubmissionModal 
-        isOpen={isModalOpen}
+        isOpen={isModalOpen} 
         onClose={() => setIsModalOpen(false)}
         city={result?.data.city || ''}
         state={result?.data.state || ''}
         onSuccess={(newRate) => setCommunityRates(prev => [...prev.filter(r => r.city.toLowerCase() !== newRate.city.toLowerCase()), newRate])}
+        defaultType={submissionType}
       />
 
       <InaccuracyReportModal

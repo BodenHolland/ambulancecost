@@ -72,9 +72,7 @@ export default function ResourceOverlay({ slug, isOpen, onClose }: Props) {
               {faq.content || <p>{faq.a}</p>}
             </article>
 
-            <div className="mt-16 pt-8 border-t border-slate-100">
-              <TakeAction />
-            </div>
+
 
             <div className="mt-12 mb-8 bg-blue-50/50 border border-blue-100 rounded-2xl px-5 py-4 flex flex-col sm:flex-row items-center gap-3 justify-between">
               <div className="flex items-center gap-3">
