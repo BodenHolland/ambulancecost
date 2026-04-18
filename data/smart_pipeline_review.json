@@ -1,0 +1,42 @@
+[
+  {
+    "bls_base": 250,
+    "als_base": null,
+    "mileage": null,
+    "tnt_fee": null,
+    "notes": "$25.00 administrative fee for all requests.",
+    "source_url_used": "https://www.stanlycountync.gov/395/Fee-Schedule-PDF",
+    "id": "charlotte_nc",
+    "last_updated": "2026-04-18"
+  },
+  {
+    "bls_base": 200,
+    "als_base": 200,
+    "mileage": null,
+    "tnt_fee": null,
+    "notes": "Ambulance with minimum staffing of 2 EMT-Basics - $147/Hour",
+    "source_url_used": "https://apps.usfa.fema.gov/pdf/efop/efo239389.pdf",
+    "id": "jacksonville_fl",
+    "last_updated": "2026-04-18"
+  },
+  {
+    "bls_base": 950,
+    "als_base": 1450,
+    "mileage": 16,
+    "tnt_fee": 375,
+    "notes": "Basic Life Support Emergency Services: $950.00 plus mileage & supplies; Advanced Life Support Services (ALS1): $1,450.00 plus mileage & supplies; Mileage (Loaded): $16.00 per mile; transport: $375.00.",
+    "source_url_used": "https://www.latwp.org/Documents/Departments/Finance/2026%20Fee%20Schedule.pdf",
+    "id": "philadelphia_pa",
+    "last_updated": "2026-04-18"
+  },
+  {
+    "bls_base": 3629,
+    "als_base": 3629,
+    "mileage": 27,
+    "tnt_fee": null,
+    "notes": "First Responder Fee $981",
+    "source_url_used": "https://www.vistafireprotectiondistrict.org/files/c7038aebe/2025-01+Ordinance+Ambulance+Schedule+of+Fees+-+Final.pdf",
+    "id": "san_diego_ca",
+    "last_updated": "2026-04-18"
+  }
+]

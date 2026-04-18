@@ -481,9 +481,9 @@ export default function AmbulanceCost() {
                           </div>
                           <p className="text-slate-500 text-sm font-medium leading-relaxed w-full">
                             Commonly referred to as "Treatment No Transport" (TNT) fees, these occur when paramedics provide medical care but do not take you to a hospital.
-                            <Link href="/resources/treatment-without-transport-explained" className="ml-2 text-blue-600 font-bold hover:underline inline-flex items-center gap-1 group/link">
+                            <button onClick={() => setActiveResource('treatment-without-transport-explained')} className="ml-2 text-blue-600 font-bold hover:underline inline-flex items-center gap-1 group/link text-left">
                               Is this covered? <ChevronRight className="w-3 h-3 group-hover/link:translate-x-0.5 transition-transform" />
-                            </Link>
+                            </button>
                           </p>
                           <div className="text-slate-500 text-sm font-medium leading-relaxed w-full border-t border-slate-100 pt-3 flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
                             <div className="flex flex-col gap-1 items-start">
@@ -543,9 +543,9 @@ export default function AmbulanceCost() {
                           </div>
                           <p className="text-slate-500 text-sm font-medium leading-relaxed">
                             Commonly referred to as "Treatment No Transport" (TNT) fees, these occur when paramedics provide medical care but do not transport you.
-                            <Link href="/resources/treatment-without-transport-explained" className="ml-2 text-blue-600 font-bold hover:underline inline-flex items-center gap-1 group/link">
+                            <button onClick={() => setActiveResource('treatment-without-transport-explained')} className="ml-2 text-blue-600 font-bold hover:underline inline-flex items-center gap-1 group/link text-left">
                               Is this covered? <ChevronRight className="w-3 h-3 group-hover/link:translate-x-0.5 transition-transform" />
-                            </Link>
+                            </button>
                           </p>
                           <div className="border-t border-amber-200/40 p-4 mt-4 bg-amber-50 rounded-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                             <p className="text-amber-800/80 text-xs italic">
@@ -593,9 +593,9 @@ export default function AmbulanceCost() {
                         </div>
                         <p className="text-slate-500 text-sm font-medium leading-relaxed">
                           Commonly referred to as "Treatment No Transport" (TNT) fees, these occur when paramedics provide medical care but do not transport you. Most municipalities charge between $150–$600.
-                          <Link href="/resources/treatment-without-transport-explained" className="ml-2 text-blue-600 font-bold hover:underline inline-flex items-center gap-1 group/link">
+                          <button onClick={() => setActiveResource('treatment-without-transport-explained')} className="ml-2 text-blue-600 font-bold hover:underline inline-flex items-center gap-1 group/link text-left">
                             Is this covered? <ChevronRight className="w-3 h-3 group-hover/link:translate-x-0.5 transition-transform" />
-                          </Link>
+                          </button>
                         </p>
                         <div className="bg-blue-50 border border-blue-100 rounded-2xl p-5 mt-4 flex flex-col sm:flex-row items-center justify-between gap-6">
                           <p className="text-blue-900/80 text-sm leading-relaxed font-medium text-center sm:text-left flex-1">

@@ -40,14 +40,7 @@ export default function ResourceOverlay({ slug, isOpen, onClose }: Props) {
       
       <div className="relative bg-white w-full max-w-4xl h-[90vh] sm:h-[85vh] rounded-t-[2.5rem] sm:rounded-[2.5rem] shadow-2xl overflow-hidden flex flex-col animate-in slide-in-from-bottom-8 duration-500">
         {/* Header */}
-        <div className="sticky top-0 z-20 bg-white/80 backdrop-blur-md border-b border-slate-100 p-6 flex justify-between items-center">
-          <button 
-            onClick={onClose}
-            className="flex items-center gap-2 text-slate-500 hover:text-blue-600 font-bold text-xs uppercase tracking-widest transition-colors group"
-          >
-            <ChevronLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-            Back to Results
-          </button>
+        <div className="sticky top-0 z-20 bg-white/80 backdrop-blur-md border-b border-slate-100 p-6 flex justify-end items-center">
           <button 
             onClick={onClose}
             className="p-2 hover:bg-slate-100 rounded-full transition-colors"

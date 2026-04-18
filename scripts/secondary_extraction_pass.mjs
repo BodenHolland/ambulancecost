@@ -4,13 +4,17 @@ import dotenv from 'dotenv';
 import Database from 'better-sqlite3';
 import path from 'path';
 import fs from 'fs/promises';
+import { fileURLToPath } from 'url';
 
-dotenv.config({ path: '.env.local' });
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+dotenv.config({ path: path.resolve(__dirname, '..', '.env.local') });
 
 const firecrawl = new FirecrawlApp({ apiKey: process.env.FIRECRAWL_API_KEY });
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-const DB_PATH = path.resolve(process.cwd(), 'zip_lookup.db');
+const DB_PATH = path.resolve(__dirname, '..', 'zip_lookup.db');
 
 // Check for --ingest flag
 const shouldIngest = process.argv.includes('--ingest');
@@ -130,7 +134,7 @@ async function runSecondaryPass() {
     FROM pricing_entities 
     WHERE estimate_type = 'official' 
       AND (bls_base IS NULL OR mileage IS NULL OR tnt_fee IS NULL)
-    LIMIT 5
+    LIMIT 20
   `).all();
   
   console.log(`Found ${missingDataEntities.length} entities needing secondary pass.`);
@@ -157,6 +161,7 @@ async function runSecondaryPass() {
 
       if (shouldIngest) {
         console.log(`💾 Ingesting results for ${entity.display_name}...`);
+        extraction.source_url = extraction.source_url_used; // map to db column
         updateStmt.run(extraction);
       }
     }
@@ -164,7 +169,7 @@ async function runSecondaryPass() {
   }
   
   db.close();
-  await fs.writeFile('data/secondary_pass_review.json', JSON.stringify(results, null, 2));
+  await fs.writeFile(path.resolve(__dirname, '../data/secondary_pass_review.json'), JSON.stringify(results, null, 2));
   console.log(`\n--- Completed. Data in data/secondary_pass_review.json. Ingested: ${shouldIngest} ---`);
 }
 
