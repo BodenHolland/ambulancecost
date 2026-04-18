@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { AlertTriangle, Phone, X, ShieldAlert } from 'lucide-react';
+import { Phone, ShieldAlert } from 'lucide-react';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -12,7 +12,6 @@ function cn(...inputs: ClassValue[]) {
 export default function SafetyNotice() {
   const [mounted, setMounted] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [hasBanner, setHasBanner] = useState(true);
 
   useEffect(() => {
     setMounted(true);
@@ -46,22 +45,6 @@ export default function SafetyNotice() {
 
   return (
     <>
-      {/* Persistent Banner */}
-      {hasBanner && (
-        <div className="bg-red-600 text-white py-2 px-4 text-center text-sm font-bold flex items-center justify-center gap-4 relative z-[60]">
-          <div className="flex items-center gap-2">
-            <AlertTriangle className="w-4 h-4 animate-pulse" />
-            <span>IN AN EMERGENCY, CALL 911 IMMEDIATELY.</span>
-          </div>
-          <button 
-            onClick={() => setHasBanner(false)}
-            className="hover:bg-white/10 p-1 rounded-md transition-colors"
-          >
-            <X className="w-4 h-4" />
-          </button>
-        </div>
-      )}
-
       {/* Emergency Notice Modal */}
       {showModal && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-slate-900/80 backdrop-blur-md animate-in fade-in duration-300">
@@ -111,3 +94,4 @@ export default function SafetyNotice() {
     </>
   );
 }
+
